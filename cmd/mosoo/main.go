@@ -9,7 +9,7 @@ import (
 	"github.com/lathe-cli/lathe/pkg/lathe"
 	"github.com/lathe-cli/lathe/pkg/runtime"
 
-	"github.com/langgenius/mosoo-cli/internal/generated"
+	"github.com/langgenius/mosoo-cli-go/internal/generated"
 )
 
 //go:embed cli.yaml
