@@ -1,0 +1,4 @@
+cli:
+  name: mosoo
+  short: "Command-line tool for the Mosoo Public Thread API"
+  command_path: auto

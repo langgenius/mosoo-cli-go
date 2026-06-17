@@ -1,0 +1,6 @@
+.cache/
+bin/
+cmd/mosoo/cli.yaml
+internal/generated/
+skills/
+specs/sources.yaml
