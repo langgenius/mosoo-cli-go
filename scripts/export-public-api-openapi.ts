@@ -24,18 +24,18 @@ const operationMetadata: Record<string, Partial<Record<HttpMethod, OperationMeta
 		post: { operationId: "Threads_Archive", tags: ["Threads"] },
 	},
 	"/threads/{threadId}/events": {
-		get: { operationId: "ThreadEvents_List", tags: ["Thread Events"] },
-		post: { operationId: "ThreadEvents_Send", tags: ["Thread Events"] },
+		get: { operationId: "ThreadEvents_ListEvents", tags: ["Events"] },
+		post: { operationId: "ThreadEvents_Send", tags: ["Events"] },
 	},
 	"/threads/{threadId}/events/stream": {
-		get: { operationId: "ThreadEvents_Stream", tags: ["Thread Events"] },
+		get: { operationId: "ThreadEvents_Stream", tags: ["Events"] },
 	},
 	"/threads/{threadId}/files": {
-		get: { operationId: "ThreadFiles_List", tags: ["Thread Files"] },
-		post: { operationId: "ThreadFiles_Add", tags: ["Thread Files"] },
+		get: { operationId: "ThreadFiles_ListFiles", tags: ["Files"] },
+		post: { operationId: "ThreadFiles_Add", tags: ["Files"] },
 	},
 	"/threads/{threadId}/files/{fileId}": {
-		delete: { operationId: "ThreadFiles_Remove", tags: ["Thread Files"] },
+		delete: { operationId: "ThreadFiles_Remove", tags: ["Files"] },
 	},
 	"/threads/{threadId}/unarchive": {
 		post: { operationId: "Threads_Unarchive", tags: ["Threads"] },

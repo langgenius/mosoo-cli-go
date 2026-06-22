@@ -1,4 +1,9 @@
 cli:
   name: mosoo
-  short: "Command-line tool for the Mosoo Public Thread API"
-  command_path: auto
+  short: "Mosoo CLI for integrators: Public Thread API (/api/v1), Console GraphQL (/api/graphql), and console REST (/api/*)"
+  command_path: namespaced
+
+auth:
+  validate:
+    method: GET
+    path: /access-tokens

@@ -1,0 +1,12 @@
+commands:
+  create:
+    example: |
+      mosoo console-rest "access tokens" create --set label="ci"
+    notes:
+      - "Creates a personal access token. The secret value is returned once."
+  list:
+    example: |
+      mosoo console-rest "access tokens" list
+  revoke:
+    example: |
+      mosoo console-rest "access tokens" revoke --token-id <token-id>

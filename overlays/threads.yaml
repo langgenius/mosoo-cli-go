@@ -1,0 +1,74 @@
+commands:
+  add:
+    short: "Attach a file to a thread"
+    long: "Associate an uploaded file with a thread."
+    example: |
+      mosoo public-thread-api files add --thread-id <thread-id> --set fileId=<file-id>
+  archive:
+    short: "Archive a thread"
+    long: "Mark a thread as archived."
+    example: |
+      mosoo public-thread-api threads archive --thread-id <thread-id>
+  create:
+    short: "Create a thread for an agent"
+    long: "Create a new thread against an agent API endpoint."
+    example: |
+      mosoo public-thread-api threads create --agent-id <agent-id> --file body.json
+    known_errors:
+      - status: 404
+        cause: "Agent not found or not accessible to this token."
+  delete:
+    short: "Delete a thread"
+    long: "Permanently delete a thread owned by this caller."
+    example: |
+      mosoo public-thread-api threads delete --thread-id <thread-id>
+  list-events:
+    short: "List thread events"
+    long: "Return recent events for a thread on the Public Thread API."
+    example: |
+      mosoo public-thread-api events list-events --thread-id <thread-id>
+    known_errors:
+      - status: 401
+        cause: "Invalid personal access token."
+      - status: 404
+        cause: "Thread not found for this caller."
+  list-files:
+    short: "List thread files"
+    long: "List files attached to a thread."
+    example: |
+      mosoo public-thread-api files list-files --thread-id <thread-id>
+  list-for-agent:
+    short: "List threads for an agent"
+    long: "List threads created against an agent API endpoint."
+    example: |
+      mosoo public-thread-api threads list-for-agent --agent-id <agent-id>
+  remove:
+    short: "Remove a thread file"
+    long: "Detach a file from a thread."
+    example: |
+      mosoo public-thread-api files remove --thread-id <thread-id> --file-id <file-id>
+  retrieve:
+    short: "Retrieve a thread"
+    long: "Fetch thread metadata and status."
+    example: |
+      mosoo public-thread-api threads retrieve --thread-id <thread-id>
+  send:
+    short: "Send events to a thread"
+    long: "Send user messages, permission decisions, or interrupts to a thread session."
+    example: |
+      mosoo public-thread-api events send --thread-id <thread-id> --file events.json
+    known_errors:
+      - status: 401
+        cause: "Invalid personal access token."
+      - status: 409
+        cause: "Idempotency key reused while the original request is still processing."
+  stream:
+    short: "Stream thread events (SSE)"
+    long: "Open a Server-Sent Events stream of thread events. Use -o raw for the event stream."
+    example: |
+      mosoo public-thread-api events stream --thread-id <thread-id> -o raw
+  unarchive:
+    short: "Unarchive a thread"
+    long: "Restore an archived thread to the active list."
+    example: |
+      mosoo public-thread-api threads unarchive --thread-id <thread-id>
