@@ -1,0 +1,1361 @@
+# Module `console`
+
+## Source
+
+- Backend: `graphql`
+- Default hostname: `http://127.0.0.1:8787/api`
+- Repository: file:///Users/x/git/lg/mosoo-cli/.cache/mosoo
+- Pinned tag: `local-snapshot`
+- Schema: `docs/graphql/console.graphql`
+- Expose queries: `accessibleAgentList`, `agent`, `agentBuilderMessages`, `agentChannelBindingList`, `agentCostCard`, `agentEditorState`, `agentManifest`, `agentSessionDiagnostics`, `agentSessionList`, `agentSessionRetrieve`, `appCostCard`, `appEnvironmentList`, `appInfo`, `appList`, `appSkillList`, `availableAgentModels`, `environment`, `exportAgentPackage`, `fileList`, `listSessionResources`, `mcpOAuthFlowStatus`, `mcpRegistry`, `organizationBillingCostCard`, `session`, `sessionList`, `sessionMessages`, `sessionProcessEvents`, `skillDetail`, `threadAgentSessionList`, `threadAgentSessionRetrieve`, `threadSessionMessages`, `threadSessionProcessEvents`, `vendorCredentialList`, `viewer`
+- Expose mutations: `addSessionResource`, `archiveAgentSession`, `autoTitleSession`, `connectMcpBearer`, `createAgent`, `createAgentFork`, `createAgentSession`, `createApp`, `createAppMcpServer`, `createDiscordAgentChannelBinding`, `createEnvironmentFork`, `createLarkAgentChannelBinding`, `createSkillFork`, `createSlackAgentChannelBinding`, `createTelegramAgentChannelBinding`, `createVendorCredential`, `deleteAgent`, `deleteAgentChannelBinding`, `deleteAgentSession`, `deleteEnvironment`, `deleteMcpServer`, `deleteOwnedSkill`, `deleteVendorCredential`, `ensureAgentBuilderThread`, `executeAgentBuilderControlPlaneAction`, `importAgentPackage`, `onboardingBootstrap`, `pollLarkAgentChannelRegistration`, `pollWeChatAgentChannelPairing`, `prewarmAgentSession`, `publishAgent`, `recreateSandbox`, `removeSessionResource`, `renameApp`, `renameSession`, `resetAgentState`, `restartDriver`, `revokeMcpCredential`, `setAppDefaultEnvironment`, `setDefaultVendorCredential`, `setEnvironmentVariableValue`, `setMcpServerEnabled`, `setSystemAgentModel`, `startLarkAgentChannelRegistration`, `startMcpOAuth`, `startWeChatAgentChannelPairing`, `testVendorCredential`, `unarchiveAgentSession`, `unpublishAgent`, `updateAgentConfig`, `updateProfile`, `updateVendorCredential`
+- Group policies: `14`
+- Selection policy: max depth `3`
+- Resolved SHA: `local-snapshot`
+
+## Agents
+
+### `mosoo console agents accessible-agent-list`
+
+- Summary: List accessible agents
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents agent`
+
+- Summary: Agent
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--agent-id` (variable, required): agentId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents agent-editor-state`
+
+- Summary: Agent editor state
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--agent-id` (variable, required): agentId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents agent-manifest`
+
+- Summary: Agent manifest
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--agent-id` (variable, required): agentId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents create-agent`
+
+- Summary: Create an agent
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-description` (variable): input.description
+  - `--input-kind` (variable, required, one of: pet|cattle): input.kind
+  - `--input-model` (variable, required): input.model
+  - `--input-name` (variable, required): input.name
+  - `--input-prompt` (variable, required): input.prompt
+  - `--input-provider` (variable, required): input.provider
+  - `--input-runtime-id` (variable, required): input.runtimeId
+  - `--input-skill-ids` (variable, required): input.skillIds
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example:
+
+```
+mosoo console agents create-agent \
+  --app-id <value>
+```
+
+### `mosoo console agents create-agent-fork`
+
+- Summary: Create an agent fork
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-kind` (variable, one of: pet|cattle): input.kind
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents delete-agent`
+
+- Summary: Delete an agent
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents export-agent-package`
+
+- Summary: Export an agent package
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--agent-id` (variable, required): agentId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents import-agent-package`
+
+- Summary: Import an agent package
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-file-id` (variable, required): input.fileId
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents publish-agent`
+
+- Summary: Publish an agent
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents recreate-sandbox`
+
+- Summary: Recreate a sandbox
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-affected-fields` (variable): input.affectedFields
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-apply-action-kind` (variable): input.applyActionKind
+  - `--input-target-version-id` (variable): input.targetVersion.id
+  - `--input-target-version-version-number` (variable): input.targetVersion.versionNumber
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents reset-agent-state`
+
+- Summary: Reset an agent state
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-affected-fields` (variable): input.affectedFields
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-apply-action-kind` (variable): input.applyActionKind
+  - `--input-target-version-id` (variable): input.targetVersion.id
+  - `--input-target-version-version-number` (variable): input.targetVersion.versionNumber
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents restart-driver`
+
+- Summary: Restart a driver
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-affected-fields` (variable): input.affectedFields
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-apply-action-kind` (variable): input.applyActionKind
+  - `--input-target-version-id` (variable): input.targetVersion.id
+  - `--input-target-version-version-number` (variable): input.targetVersion.versionNumber
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents unpublish-agent`
+
+- Summary: Unpublish an agent
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--agent-id` (variable, required): agentId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console agents update-agent-config`
+
+- Summary: Update an agent config
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-builder-component-decisions-agent-type` (variable, one of: decided|skipped): input.builder.componentDecisions.agentType
+  - `--input-builder-component-decisions-environment` (variable, one of: bound|created|skipped): input.builder.componentDecisions.environment
+  - `--input-description` (variable): input.description
+  - `--input-environment-environment-id` (variable): input.environment.environmentId
+  - `--input-kind` (variable, required, one of: pet|cattle): input.kind
+  - `--input-mcp-server-ids` (variable, required): input.mcpServerIds
+  - `--input-model` (variable, required): input.model
+  - `--input-name` (variable, required): input.name
+  - `--input-prompt` (variable, required): input.prompt
+  - `--input-provider` (variable, required): input.provider
+  - `--input-provider-options` (variable, required): input.providerOptions
+  - `--input-runtime-id` (variable, required): input.runtimeId
+  - `--input-skill-ids` (variable, required): input.skillIds
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Apps
+
+### `mosoo console apps app-list`
+
+- Summary: List apps
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--organization-id` (variable, required): organizationId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example:
+
+```
+mosoo console apps app-list \
+  --organization-id <value>
+```
+
+### `mosoo console apps create-app`
+
+- Summary: Create an app
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-name` (variable, required): input.name
+  - `--input-organization-id` (variable, required): input.organizationId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example:
+
+```
+mosoo console apps create-app \
+  --app-id <value>
+```
+
+### `mosoo console apps rename-app`
+
+- Summary: Rename an app
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-name` (variable, required): input.name
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Builder
+
+### `mosoo console builder agent-builder-messages`
+
+- Summary: Agent builder messages
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--agent-id` (variable, required): agentId
+  - `--before-seq` (variable): beforeSeq
+  - `--limit` (variable): limit
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console builder ensure-agent-builder-thread`
+
+- Summary: Ensure an agent builder thread
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--agent-id` (variable, required): agentId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console builder execute-agent-builder-control-plane-action`
+
+- Summary: Execute an agent builder control plane action
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-create-environment-payload-description` (variable): input.createEnvironmentPayload.description
+  - `--input-create-environment-payload-name` (variable): input.createEnvironmentPayload.name
+  - `--input-create-remote-mcp-server-payload-auth-type` (variable, one of: oauth|bearer): input.createRemoteMcpServerPayload.authType
+  - `--input-create-remote-mcp-server-payload-description` (variable): input.createRemoteMcpServerPayload.description
+  - `--input-create-remote-mcp-server-payload-name` (variable): input.createRemoteMcpServerPayload.name
+  - `--input-create-remote-mcp-server-payload-url` (variable): input.createRemoteMcpServerPayload.url
+  - `--input-draft-yaml` (variable): input.draftYaml
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-tool-id` (variable, required, one of: create_agent|apply_agent_config|open_preview|create_environment|create_remote_mcp_server|reset_preview_session): input.toolId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Channels
+
+### `mosoo console channels agent-channel-binding-list`
+
+- Summary: List agent channel bindings
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--agent-id` (variable, required): agentId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console channels create-discord-agent-channel-binding`
+
+- Summary: Create a discord agent channel binding
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-application-id` (variable, required): input.applicationId
+  - `--input-bot-token` (variable, required): input.botToken
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-relay-secret` (variable, required): input.relaySecret
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console channels create-lark-agent-channel-binding`
+
+- Summary: Create a lark agent channel binding
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-lark-app-id` (variable, required): input.larkAppId
+  - `--input-app-secret` (variable, required): input.appSecret
+  - `--input-connection-mode` (variable, required, one of: webhook|websocket): input.connectionMode
+  - `--input-domain` (variable, required, one of: feishu|lark): input.domain
+  - `--input-encrypt-key` (variable): input.encryptKey
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-verification-token` (variable): input.verificationToken
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console channels create-slack-agent-channel-binding`
+
+- Summary: Create a slack agent channel binding
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-app-level-token` (variable): input.appLevelToken
+  - `--input-bot-token` (variable, required): input.botToken
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-signing-secret` (variable, required): input.signingSecret
+  - `--input-thread-replies-require-mention` (variable): input.threadRepliesRequireMention
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console channels create-telegram-agent-channel-binding`
+
+- Summary: Create a telegram agent channel binding
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-bot-token` (variable, required): input.botToken
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-webhook-secret` (variable, required): input.webhookSecret
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console channels delete-agent-channel-binding`
+
+- Summary: Delete an agent channel binding
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-binding-id` (variable, required): input.bindingId
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console channels poll-lark-agent-channel-registration`
+
+- Summary: Poll lark agent channel registration
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-device-code` (variable, required): input.deviceCode
+  - `--input-domain` (variable, required, one of: feishu|lark): input.domain
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console channels poll-we-chat-agent-channel-pairing`
+
+- Summary: Poll we chat agent channel pairing
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-qr-token` (variable, required): input.qrToken
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console channels start-lark-agent-channel-registration`
+
+- Summary: Start lark agent channel registration
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-domain` (variable, required, one of: feishu|lark): input.domain
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console channels start-we-chat-agent-channel-pairing`
+
+- Summary: Start we chat agent channel pairing
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Common
+
+### `mosoo console common app-info`
+
+- Summary: App info
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags: none
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Cost
+
+### `mosoo console cost agent-cost-card`
+
+- Summary: Agent cost card
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--agent-id` (variable, required): agentId
+  - `--range` (variable, required, one of: LAST_7_DAYS|LAST_30_DAYS|MONTH_TO_DATE|LAST_90_DAYS): range
+  - `--run-purposes` (variable): runPurposes
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console cost app-cost-card`
+
+- Summary: App cost card
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--range` (variable, required, one of: LAST_7_DAYS|LAST_30_DAYS|MONTH_TO_DATE|LAST_90_DAYS): range
+  - `--run-purposes` (variable): runPurposes
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console cost organization-billing-cost-card`
+
+- Summary: Organization billing cost card
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--organization-id` (variable, required): organizationId
+  - `--range` (variable, required, one of: LAST_7_DAYS|LAST_30_DAYS|MONTH_TO_DATE|LAST_90_DAYS): range
+  - `--run-purposes` (variable): runPurposes
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Credentials
+
+### `mosoo console credentials available-agent-models`
+
+- Summary: Available agent models
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--runtime-id` (variable, required): runtimeId
+  - `--current-model-id` (variable): currentModelId
+  - `--current-vendor-id` (variable): currentVendorId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console credentials create-vendor-credential`
+
+- Summary: Create a vendor credential
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-api-base` (variable): input.apiBase
+  - `--input-api-key` (variable, required): input.apiKey
+  - `--input-models` (variable): input.models
+  - `--input-name` (variable, required): input.name
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-vendor-id` (variable, required): input.vendorId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console credentials delete-vendor-credential`
+
+- Summary: Delete a vendor credential
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-id` (variable, required): input.id
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console credentials set-default-vendor-credential`
+
+- Summary: Set default vendor credential
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-id` (variable, required): input.id
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console credentials test-vendor-credential`
+
+- Summary: Test vendor credential
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-api-base` (variable): input.apiBase
+  - `--input-api-key` (variable, required): input.apiKey
+  - `--input-model-id` (variable): input.modelId
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-vendor-id` (variable, required): input.vendorId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console credentials update-vendor-credential`
+
+- Summary: Update a vendor credential
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-api-base` (variable): input.apiBase
+  - `--input-api-key` (variable): input.apiKey
+  - `--input-id` (variable, required): input.id
+  - `--input-models` (variable): input.models
+  - `--input-name` (variable): input.name
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console credentials vendor-credential-list`
+
+- Summary: List vendor credentials
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Environments
+
+### `mosoo console environments app-environment-list`
+
+- Summary: List app environments
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console environments create-environment-fork`
+
+- Summary: Create an environment fork
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-environment-id` (variable, required): input.environmentId
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console environments delete-environment`
+
+- Summary: Delete an environment
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-environment-id` (variable, required): input.environmentId
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console environments environment`
+
+- Summary: Environment
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--environment-id` (variable, required): environmentId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console environments set-app-default-environment`
+
+- Summary: Set app default environment
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-environment-id` (variable, required): input.environmentId
+  - `--input-app-id` (variable, required): input.appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console environments set-environment-variable-value`
+
+- Summary: Set environment variable value
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-environment-id` (variable, required): input.environmentId
+  - `--input-key` (variable, required): input.key
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-value` (variable, required): input.value
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Files
+
+### `mosoo console files file-list`
+
+- Summary: List files
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-scope-id` (variable): input.scopeId
+  - `--input-scope-kind` (variable, one of: agent_package|app_draft|library|session): input.scopeKind
+  - `--input-session-id` (variable): input.sessionId
+  - `--input-session-kind` (variable, one of: artifact|attachment): input.sessionKind
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## MCP
+
+### `mosoo console mcp connect-mcp-bearer`
+
+- Summary: Connect a mcp bearer
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-server-id` (variable, required): input.serverId
+  - `--input-subject-label` (variable): input.subjectLabel
+  - `--input-token` (variable, required): input.token
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console mcp create-app-mcp-server`
+
+- Summary: Create an app mcp server
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-auth-type` (variable, required, one of: oauth|bearer): input.authType
+  - `--input-description` (variable): input.description
+  - `--input-icon-url` (variable): input.iconUrl
+  - `--input-name` (variable, required): input.name
+  - `--input-oauth-client-id` (variable): input.oauthClientId
+  - `--input-oauth-client-secret` (variable): input.oauthClientSecret
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-url` (variable, required): input.url
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console mcp delete-mcp-server`
+
+- Summary: Delete a mcp server
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--server-id` (variable, required): serverId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console mcp mcp-o-auth-flow-status`
+
+- Summary: console_mcpOAuthFlowStatus
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--flow-id` (variable, required): flowId
+
+### `mosoo console mcp mcp-registry`
+
+- Summary: Mcp registry
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console mcp revoke-mcp-credential`
+
+- Summary: Revoke a mcp credential
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--server-id` (variable, required): serverId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console mcp set-mcp-server-enabled`
+
+- Summary: Set mcp server enabled
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--server-id` (variable, required): serverId
+  - `--enabled` (variable, required): enabled
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console mcp start-mcp-o-auth`
+
+- Summary: console_startMcpOAuth
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-return-url` (variable): input.returnUrl
+  - `--input-server-id` (variable, required): input.serverId
+
+## Onboarding
+
+### `mosoo console onboarding onboarding-bootstrap`
+
+- Summary: Onboarding bootstrap
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-name` (variable): input.name
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Sessions
+
+### `mosoo console sessions add-session-resource`
+
+- Summary: Add a session resource
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-file-content-type` (variable, required): input.file.contentType
+  - `--input-file-name` (variable, required): input.file.name
+  - `--input-file-size` (variable, required): input.file.size
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-session-id` (variable, required): input.sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions agent-session-diagnostics`
+
+- Summary: Agent session diagnostics
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions agent-session-list`
+
+- Summary: List agent sessions
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--agent-id` (variable, required): agentId
+  - `--archived` (variable): archived
+  - `--before-cursor` (variable): beforeCursor
+  - `--limit` (variable): limit
+  - `--participant-only` (variable): participantOnly
+  - `--type` (variable, one of: api_channel|preview|ui): type
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example: `mosoo console sessions agent-session-list`
+
+### `mosoo console sessions agent-session-retrieve`
+
+- Summary: Agent session retrieve
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions archive-agent-session`
+
+- Summary: Archive an agent session
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions auto-title-session`
+
+- Summary: Auto a title session
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-session-id` (variable, required): input.sessionId
+  - `--input-title` (variable, required): input.title
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions create-agent-session`
+
+- Summary: Create an agent session
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable, required): input.agentId
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-type` (variable, one of: api_channel|preview|ui): input.type
+  - `--input-wait-for-runtime-ready` (variable): input.waitForRuntimeReady
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions delete-agent-session`
+
+- Summary: Delete an agent session
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions list-session-resources`
+
+- Summary: List session resources
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions prewarm-agent-session`
+
+- Summary: Prewarm an agent session
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions remove-session-resource`
+
+- Summary: Remove a session resource
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-resource-id` (variable, required): input.resourceId
+  - `--input-session-id` (variable, required): input.sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions rename-session`
+
+- Summary: Rename a session
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-session-id` (variable, required): input.sessionId
+  - `--input-title` (variable, required): input.title
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions session`
+
+- Summary: Session
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions session-list`
+
+- Summary: List sessions
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--archived` (variable): archived
+  - `--before-cursor` (variable): beforeCursor
+  - `--limit` (variable): limit
+  - `--app-id` (variable, required): appId
+  - `--type` (variable, one of: api_channel|preview|ui): type
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example: `mosoo console sessions session-list`
+
+### `mosoo console sessions session-messages`
+
+- Summary: Session messages
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions session-process-events`
+
+- Summary: Session process events
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--limit` (variable): limit
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions thread-agent-session-list`
+
+- Summary: List thread agent sessions
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--archived` (variable): archived
+  - `--before-cursor` (variable): beforeCursor
+  - `--limit` (variable): limit
+  - `--app-id` (variable, required): appId
+  - `--type` (variable, one of: api_channel|preview|ui): type
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions thread-agent-session-retrieve`
+
+- Summary: Thread agent session retrieve
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions thread-session-messages`
+
+- Summary: Thread session messages
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions thread-session-process-events`
+
+- Summary: Thread session process events
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--limit` (variable): limit
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions unarchive-agent-session`
+
+- Summary: Unarchive an agent session
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## Skills
+
+### `mosoo console skills app-skill-list`
+
+- Summary: List app skills
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console skills create-skill-fork`
+
+- Summary: Create a skill fork
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-skill-id` (variable, required): input.skillId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console skills delete-owned-skill`
+
+- Summary: Delete an owned skill
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--skill-id` (variable, required): skillId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console skills skill-detail`
+
+- Summary: Skill detail
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--skill-id` (variable, required): skillId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+## User
+
+### `mosoo console user set-system-agent-model`
+
+- Summary: Set system agent model
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-model-id` (variable, required): input.modelId
+  - `--input-vendor` (variable, required): input.vendor
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console user update-profile`
+
+- Summary: Update a profile
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-image-url` (variable): input.imageUrl
+  - `--input-name` (variable, required): input.name
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console user viewer`
+
+- Summary: Show the signed-in viewer
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags: none
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example: `mosoo console user viewer`
+
