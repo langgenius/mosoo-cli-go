@@ -46,6 +46,18 @@ mosoo doctor --json
 Use the result to decide whether the current task targets local Mosoo runtime or
 Mosoo cloud runtime before running API commands.
 
+## Command Selection
+
+Use generated CLI commands for Mosoo resource operations, and use
+\`references/api.md\` for application code that calls an already published Agent.
+Do not invent a wrapper command when the generated catalog already exposes the
+operation.
+
+For a new App, Agent creation, publishing, credential setup, or Console/API
+inspection, search the generated catalog first. For app environment files only,
+derive \`MOSOO_API_BASE\`, \`MOSOO_AGENT_ID\`, and \`MOSOO_API_TOKEN\` from the
+published Agent/API contract instead of creating new resources.
+
 ${body.trim()}
 `;
 }
