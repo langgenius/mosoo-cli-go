@@ -219,7 +219,7 @@ sources:
             - updateVendorCredential
           group: Credentials
       selection:
-        max_depth: 3
+        max_depth: 5
   consolerest:
     display_name: console-rest
     default_hostname: http://127.0.0.1:8787/api

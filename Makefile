@@ -97,7 +97,7 @@ _codegen: $(LATHE_BIN)
 	$(BUN) scripts/export-public-api-openapi.ts
 	$(BUN) scripts/export-console-graphql.ts
 	$(BUN) scripts/export-console-rest-openapi.ts
-	MOSOO_HOST_BASE=$(MOSOO_HOST_BASE) $(BUN) scripts/render-sources-yaml.ts
+	MOSOO_HOST_BASE=$(MOSOO_HOST_BASE) MOSOO_REPO_URL=$(MOSOO_REPO) $(BUN) scripts/render-sources-yaml.ts
 	$(BUN) scripts/render-overlays.ts
 	cp "$(MOSOO_DIR)/$(SPEC_FILE)" "$(SYNC_DIR)/$(SPEC_FILE)"
 	cp "$(MOSOO_DIR)/$(GRAPHQL_SPEC_FILE)" "$(CONSOLE_SYNC_DIR)/$(GRAPHQL_SPEC_FILE)"

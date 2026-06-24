@@ -20,10 +20,25 @@ type OverlayCommand = {
 	known_errors?: { status: number; cause: string }[];
 };
 
-const exampleFields = new Set(["viewer", "appList", "createApp", "createAgent", "agentSessionList", "sessionList"]);
+const exampleFields = new Set([
+	"viewer",
+	"appList",
+	"appOverview",
+	"controlPlaneOverview",
+	"createApp",
+	"createAgent",
+	"createVendorCredential",
+	"publishAgent",
+	"startAgentRun",
+	"testVendorCredential",
+	"threadSessionProcessEvents",
+	"vendorCredentialList",
+	"agentSessionList",
+	"sessionList",
+]);
 const noArticleVerbs = new Set(["set", "poll", "start", "test"]);
 
-const consoleCommandOverrides: Record<string, Partial<OverlayCommand>> = {
+const consoleCommandOverrides: Record<string, OverlayCommand> = {
 	"agent-manifest": {
 		use: "manifest",
 		aliases: ["agent-manifest"],
@@ -52,6 +67,121 @@ const consoleCommandOverrides: Record<string, Partial<OverlayCommand>> = {
 			"Uses POST /graphql on the console default hostname (/api).",
 			"Agent config updates are full-manifest updates: pull agent-manifest first, preserve unchanged environment/runtime/provider/tool fields, and submit the complete updated config.",
 		],
+	},
+	accessibleAgentList: {
+		aliases: ["list"],
+		short: "List accessible Agents",
+		long: "List Agents available to the signed-in user for one App.",
+		example: "mosoo console agents list --app-id <app-id> -o json",
+	},
+	appList: {
+		aliases: ["list"],
+		short: "List Apps",
+		long: "List Apps for an Organization. Prefer control-plane-overview for the current-user CLI overview path.",
+		example: "mosoo console apps list --organization-id <organization-id> -o json",
+	},
+	appOverview: {
+		short: "Show one App overview",
+		long: "Show one App's console overview, including limited Agent and provider credential metadata.",
+		example: "mosoo console apps app-overview --app-id <app-id> -o json",
+	},
+	controlPlaneOverview: {
+		aliases: ["overview"],
+		short: "Show control-plane overview",
+		long: "Show the current user's control-plane overview for generated CLI list flows. This is the main ls/overview path.",
+		example: "mosoo console apps overview --app-limit 20 --agent-limit 20 --credential-limit 20 -o json",
+		notes: [
+			"Use this before lower-level app-list, accessible-agent-list, or vendor-credential-list when you need a CLI overview.",
+		],
+	},
+	createAgent: {
+		aliases: ["create"],
+		short: "Create an Agent",
+		long: "Create an Agent draft from a structured input. Publish it with publish-agent after provider credentials are configured.",
+		example: [
+			"cat > agent-create.json <<'JSON'",
+			"{",
+			"  \"input\": {",
+			"    \"appId\": \"<app-id>\",",
+			"    \"name\": \"Research Agent\",",
+			"    \"kind\": \"<pet-or-cattle>\",",
+			"    \"runtimeId\": \"<runtime-id>\",",
+			"    \"provider\": \"<provider>\",",
+			"    \"model\": \"<model>\",",
+			"    \"prompt\": \"You research concise answers with citations.\",",
+			"    \"skillIds\": []",
+			"  }",
+			"}",
+			"JSON",
+			"mosoo console agents create --file agent-create.json -o json",
+		].join("\n"),
+	},
+	createVendorCredential: {
+		aliases: ["create"],
+		short: "Add a provider key",
+		long: "Create a provider credential for an App. Plaintext keys are accepted on the command line, but may be stored by shell history.",
+		example: [
+			"mosoo console credentials create \\",
+			"  --input-app-id <app-id> \\",
+			"  --input-vendor-id openai \\",
+			"  --input-name \"OpenAI\" \\",
+			"  --input-api-key 'sk-...' \\",
+			"  -o json",
+		].join("\n"),
+		notes: [
+			"For preset providers such as openai or anthropic, omit input.models unless Mosoo asks for explicit model configuration.",
+			"Plaintext terminal input is supported through the generated --input-api-key flag. This can be visible in shell history.",
+			"Current Lathe required variable flags must be present; --set and --set-str can supplement body fields but do not replace required flags.",
+		],
+	},
+	publishAgent: {
+		aliases: ["publish"],
+		short: "Publish an Agent",
+		long: "Publish an Agent after its draft configuration and provider credentials are ready.",
+		example: "mosoo console agents publish --input-app-id <app-id> --input-agent-id <agent-id> -o json",
+	},
+	startAgentRun: {
+		aliases: ["run"],
+		short: "Start an Agent run",
+		long: "Create or continue a Thread, queue one prompt Run, and return event-surface metadata for polling.",
+		example: [
+			"mosoo console sessions run \\",
+			"  --input-app-id <app-id> \\",
+			"  --input-agent-id <agent-id> \\",
+			"  --input-prompt \"Summarize this repository\" \\",
+			"  -o json",
+		].join("\n"),
+		notes: [
+			"This is the generated main path for mosoo run. Use the returned appId/sessionId with thread-session-process-events to poll output.",
+		],
+	},
+	testVendorCredential: {
+		aliases: ["test"],
+		short: "Test a provider key",
+		long: "Test provider credential material before or after saving it.",
+		example: [
+			"mosoo console credentials test \\",
+			"  --input-app-id <app-id> \\",
+			"  --input-vendor-id openai \\",
+			"  --input-api-key 'sk-...' \\",
+			"  -o json",
+		].join("\n"),
+		notes: [
+			"Plaintext terminal input is supported through the generated --input-api-key flag. This can be visible in shell history.",
+			"Current Lathe required variable flags must be present; --set and --set-str can supplement body fields but do not replace required flags.",
+		],
+	},
+	threadSessionProcessEvents: {
+		aliases: ["events", "process-events"],
+		short: "Poll Thread session events",
+		long: "Read process events for a Thread session. Use this after start-agent-run when streamUrl is null.",
+		example: "mosoo console sessions events --app-id <app-id> --session-id <session-id> -o json",
+	},
+	vendorCredentialList: {
+		aliases: ["list"],
+		short: "List provider keys",
+		long: "List provider credentials for an App. Prefer control-plane-overview for summary counts and status.",
+		example: "mosoo console credentials list --app-id <app-id> -o json",
 	},
 };
 
@@ -171,13 +301,24 @@ function buildConsoleOverlay(): Record<string, OverlayCommand> {
 	for (const { group, field } of collectConsoleGraphQLOperations()) {
 		const use = camelToKebab(field);
 		const flags = requiredFlags(field);
-		commands[use] = {
+		const base: OverlayCommand = {
 			short: humanizeGraphQLField(field),
 			long: `${humanizeGraphQLField(field)} via the Mosoo Console GraphQL API (${group} surface). Requires a personal access token logged in to the /api host.`,
 			...(exampleFields.has(field) ? { example: consoleExample(group, use, flags) } : {}),
 			notes: ["Uses POST /graphql on the console default hostname (/api)."],
 			known_errors: [{ status: 401, cause: "Missing, invalid, or revoked personal access token." }],
 			...consoleCommandOverrides[use],
+		};
+		const override = consoleCommandOverrides[field];
+		commands[use] = {
+			...base,
+			...override,
+			...(base.notes || override?.notes
+				? { notes: [...(base.notes ?? []), ...(override?.notes ?? [])] }
+				: {}),
+			...(base.known_errors || override?.known_errors
+				? { known_errors: [...(base.known_errors ?? []), ...(override?.known_errors ?? [])] }
+				: {}),
 		};
 	}
 	return commands;

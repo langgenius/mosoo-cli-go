@@ -10,14 +10,14 @@
 - Expose queries: `accessibleAgentList`, `agent`, `agentChannelBindingList`, `agentCostCard`, `agentEditorState`, `agentManifest`, `agentSessionDiagnostics`, `agentSessionList`, `agentSessionRetrieve`, `appCostCard`, `appEnvironmentList`, `appInfo`, `appList`, `appOverview`, `appSkillList`, `availableAgentModels`, `controlPlaneOverview`, `environment`, `exportAgentPackage`, `fileList`, `listSessionResources`, `mcpOAuthFlowStatus`, `mcpRegistry`, `organizationBillingCostCard`, `session`, `sessionList`, `sessionMessages`, `sessionProcessEvents`, `skillDetail`, `threadAgentSessionList`, `threadAgentSessionRetrieve`, `threadSessionMessages`, `threadSessionProcessEvents`, `vendorCredentialList`, `viewer`
 - Expose mutations: `addSessionResource`, `archiveAgentSession`, `autoTitleSession`, `connectMcpBearer`, `createAgent`, `createAgentFork`, `createAgentSession`, `createApp`, `createAppMcpServer`, `createDiscordAgentChannelBinding`, `createEnvironmentFork`, `createLarkAgentChannelBinding`, `createSkillFork`, `createSlackAgentChannelBinding`, `createTelegramAgentChannelBinding`, `createVendorCredential`, `deleteAgent`, `deleteAgentChannelBinding`, `deleteAgentSession`, `deleteEnvironment`, `deleteMcpServer`, `deleteOwnedSkill`, `deleteVendorCredential`, `importAgentPackage`, `onboardingBootstrap`, `pollLarkAgentChannelRegistration`, `pollWeChatAgentChannelPairing`, `prewarmAgentSession`, `publishAgent`, `recreateSandbox`, `removeSessionResource`, `renameApp`, `renameSession`, `resetAgentState`, `restartDriver`, `revokeMcpCredential`, `setAppDefaultEnvironment`, `setDefaultVendorCredential`, `setEnvironmentVariableValue`, `setMcpServerEnabled`, `setSystemAgentModel`, `startAgentRun`, `startLarkAgentChannelRegistration`, `startMcpOAuth`, `startWeChatAgentChannelPairing`, `testVendorCredential`, `unarchiveAgentSession`, `unpublishAgent`, `updateAgentConfig`, `updateProfile`, `updateVendorCredential`
 - Group policies: `13`
-- Selection policy: max depth `3`
+- Selection policy: max depth `5`
 - Resolved SHA: `local-snapshot`
 
 ## Agents
 
 ### `mosoo console agents accessible-agent-list`
 
-- Summary: List accessible agents
+- Summary: List accessible Agents
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -27,6 +27,7 @@
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example: `mosoo console agents list --app-id <app-id> -o json`
 
 ### `mosoo console agents agent`
 
@@ -58,7 +59,7 @@
 
 ### `mosoo console agents create-agent`
 
-- Summary: Create an agent
+- Summary: Create an Agent
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -79,8 +80,21 @@
 - Example:
 
 ```
-mosoo console agents create-agent \
-  --app-id <value>
+cat > agent-create.json <<'JSON'
+{
+  "input": {
+    "appId": "<app-id>",
+    "name": "Research Agent",
+    "kind": "<pet-or-cattle>",
+    "runtimeId": "<runtime-id>",
+    "provider": "<provider>",
+    "model": "<model>",
+    "prompt": "You research concise answers with citations.",
+    "skillIds": []
+  }
+}
+JSON
+mosoo console agents create --file agent-create.json -o json
 ```
 
 ### `mosoo console agents create-agent-fork`
@@ -142,7 +156,7 @@ mosoo console agents create-agent \
 
 ### `mosoo console agents publish-agent`
 
-- Summary: Publish an agent
+- Summary: Publish an Agent
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -153,6 +167,7 @@ mosoo console agents create-agent \
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example: `mosoo console agents publish --input-app-id <app-id> --input-agent-id <agent-id> -o json`
 
 ### `mosoo console agents recreate-sandbox`
 
@@ -226,7 +241,7 @@ mosoo console agents create-agent \
 
 ### `mosoo console apps app-list`
 
-- Summary: List apps
+- Summary: List Apps
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -236,16 +251,11 @@ mosoo console agents create-agent \
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
-- Example:
-
-```
-mosoo console apps app-list \
-  --organization-id <value>
-```
+- Example: `mosoo console apps list --organization-id <organization-id> -o json`
 
 ### `mosoo console apps app-overview`
 
-- Summary: App overview
+- Summary: Show one App overview
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -257,10 +267,11 @@ mosoo console apps app-list \
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example: `mosoo console apps app-overview --app-id <app-id> -o json`
 
 ### `mosoo console apps control-plane-overview`
 
-- Summary: Control plane overview
+- Summary: Show control-plane overview
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -270,8 +281,10 @@ mosoo console apps app-list \
   - `--credential-limit` (variable): credentialLimit
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
+  - Use this before lower-level app-list, accessible-agent-list, or vendor-credential-list when you need a CLI overview.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example: `mosoo console apps overview --app-limit 20 --agent-limit 20 --credential-limit 20 -o json`
 
 ### `mosoo console apps create-app`
 
@@ -550,7 +563,7 @@ mosoo console apps create-app \
 
 ### `mosoo console credentials create-vendor-credential`
 
-- Summary: Create a vendor credential
+- Summary: Add a provider key
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -563,8 +576,21 @@ mosoo console apps create-app \
   - `--input-vendor-id` (variable, required): input.vendorId
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
+  - For preset providers such as openai or anthropic, omit input.models unless Mosoo asks for explicit model configuration.
+  - Plaintext terminal input is supported through the generated --input-api-key flag. This can be visible in shell history.
+  - Current Lathe required variable flags must be present; --set and --set-str can supplement body fields but do not replace required flags.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example:
+
+```
+mosoo console credentials create \
+  --input-app-id <app-id> \
+  --input-vendor-id openai \
+  --input-name "OpenAI" \
+  --input-api-key 'sk-...' \
+  -o json
+```
 
 ### `mosoo console credentials delete-vendor-credential`
 
@@ -596,7 +622,7 @@ mosoo console apps create-app \
 
 ### `mosoo console credentials test-vendor-credential`
 
-- Summary: Test vendor credential
+- Summary: Test a provider key
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -608,8 +634,19 @@ mosoo console apps create-app \
   - `--input-vendor-id` (variable, required): input.vendorId
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
+  - Plaintext terminal input is supported through the generated --input-api-key flag. This can be visible in shell history.
+  - Current Lathe required variable flags must be present; --set and --set-str can supplement body fields but do not replace required flags.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example:
+
+```
+mosoo console credentials test \
+  --input-app-id <app-id> \
+  --input-vendor-id openai \
+  --input-api-key 'sk-...' \
+  -o json
+```
 
 ### `mosoo console credentials update-vendor-credential`
 
@@ -631,7 +668,7 @@ mosoo console apps create-app \
 
 ### `mosoo console credentials vendor-credential-list`
 
-- Summary: List vendor credentials
+- Summary: List provider keys
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -641,6 +678,7 @@ mosoo console apps create-app \
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example: `mosoo console credentials list --app-id <app-id> -o json`
 
 ## Environments
 
@@ -1124,7 +1162,7 @@ mosoo console apps create-app \
 
 ### `mosoo console sessions start-agent-run`
 
-- Summary: Start agent run
+- Summary: Start an Agent run
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -1138,8 +1176,18 @@ mosoo console apps create-app \
   - `--input-wait-for-runtime-ready` (variable): input.waitForRuntimeReady
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
+  - This is the generated main path for mosoo run. Use the returned appId/sessionId with thread-session-process-events to poll output.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example:
+
+```
+mosoo console sessions run \
+  --input-app-id <app-id> \
+  --input-agent-id <agent-id> \
+  --input-prompt "Summarize this repository" \
+  -o json
+```
 
 ### `mosoo console sessions thread-agent-session-list`
 
@@ -1188,7 +1236,7 @@ mosoo console apps create-app \
 
 ### `mosoo console sessions thread-session-process-events`
 
-- Summary: Thread session process events
+- Summary: Poll Thread session events
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
@@ -1200,6 +1248,7 @@ mosoo console apps create-app \
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
+- Example: `mosoo console sessions events --app-id <app-id> --session-id <session-id> -o json`
 
 ### `mosoo console sessions unarchive-agent-session`
 
