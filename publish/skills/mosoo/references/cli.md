@@ -1,13 +1,19 @@
----
-name: mosoo
-description: >
-  Use when operating the mosoo generated CLI. Discover commands, inspect parameters,
-  check auth state, and execute API operations safely.
----
+# CLI Reference
 
-# mosoo CLI
+Generated from Lathe's mosoo CLI Skill output during `make build`.
 
-Use this skill when a user asks you to operate `mosoo`, inspect its API commands, or find the right generated command for an API task.
+## Runtime State
+
+Run:
+
+```sh
+mosoo doctor --json
+```
+
+Use the result to decide whether the current task targets local Mosoo runtime or
+Mosoo cloud runtime before running API commands.
+
+Use this reference when a user asks you to operate `mosoo`, inspect its API commands, or find the right generated command for an API task.
 
 ## Workflow
 
@@ -26,10 +32,10 @@ Use this skill when a user asks you to operate `mosoo`, inspect its API commands
 
 ## References
 
-- Read `references/catalog.md` for the command discovery protocol and catalog field meanings.
-- Read `references/modules/console.md` for the `console` module command index.
-- Read `references/modules/console-rest.md` for the `console-rest` module command index.
-- Read `references/modules/public-thread-api.md` for the `public-thread-api` module command index.
+- Read `references/cli/catalog.md` for the command discovery protocol and catalog field meanings.
+- Read `references/cli/modules/console.md` for the `console` module command index.
+- Read `references/cli/modules/console-rest.md` for the `console-rest` module command index.
+- Read `references/cli/modules/public-thread-api.md` for the `public-thread-api` module command index.
 
 ## Rules
 
