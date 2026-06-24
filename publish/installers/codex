@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PROGRAM_NAME="mosoo bootstrap"
-RELEASE_BASE_URL="${MOSOO_RELEASE_BASE_URL:-https://github.com/langgenius/mosoo-cli-go/releases/latest/download}"
+RELEASE_BASE_URL="${MOSOO_RELEASE_BASE_URL:-https://install.mosoo.ai/releases/latest/download}"
 BIN_DIR="${MOSOO_BIN_DIR:-$HOME/.local/bin}"
 CODEX_HOME_VALUE="${CODEX_HOME:-$HOME/.codex}"
 SKILL_DIR="${MOSOO_SKILL_DIR:-$CODEX_HOME_VALUE/skills/mosoo}"
@@ -11,7 +11,7 @@ CLI_ARCHIVE_URL="${MOSOO_CLI_ARCHIVE_URL:-}"
 SKILL_ARCHIVE_URL="${MOSOO_SKILL_ARCHIVE_URL:-}"
 CLI_SHA256="${MOSOO_CLI_SHA256:-}"
 SKILL_SHA256="${MOSOO_SKILL_SHA256:-}"
-TARGET="${MOSOO_TARGET:-}"
+TARGET="${MOSOO_TARGET:-cloud}"
 BASE_URL="${MOSOO_BASE_URL:-}"
 
 ASSUME_YES=false
@@ -36,7 +36,7 @@ Examples:
   curl -fsSL https://install.mosoo.ai/codex | bash
   curl -fsSL https://install.mosoo.ai/codex | bash -s -- --yes
   curl -fsSL https://install.mosoo.ai/codex | bash -s -- --dry-run
-  curl -fsSL https://install.mosoo.ai/codex | bash -s -- --target cloud
+  curl -fsSL https://install.mosoo.ai/codex | bash -s -- --target local
   curl -fsSL https://install.mosoo.ai/codex | bash -s -- --cloudflare
 
 Options:
@@ -47,7 +47,7 @@ Options:
       --source-root DIR     Install from a local mosoo-cli-go checkout for development.
       --cli-url URL         Download CLI archive from URL.
       --skill-url URL       Download Skill archive from URL.
-      --target TARGET       Write initial target config: local, cloud, or custom.
+      --target TARGET       Write initial target config: local, cloud, or custom. Default runtime target: cloud.
       --base-url URL        Base URL for --target custom, or override local/cloud base URL.
       --write-config        Write global Mosoo target config.
       --no-cli              Skip CLI install/update.
@@ -61,6 +61,7 @@ Environment:
   MOSOO_CLI_ARCHIVE_URL     Override CLI release archive URL.
   MOSOO_SKILL_ARCHIVE_URL   Override Skill release archive URL.
   MOSOO_API_TOKEN           Token used for non-interactive mosoo auth login.
+  MOSOO_TARGET              Runtime target used by login and doctor. Default: cloud.
   MOSOO_BOOTSTRAP_SOURCE_ROOT
                             Local checkout root used by development installs.
 EOF

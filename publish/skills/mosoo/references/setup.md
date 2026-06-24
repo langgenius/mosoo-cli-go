@@ -39,5 +39,7 @@ mosoo doctor --json
 ```
 
 Bootstrap may install or update the Mosoo CLI, install or update this Mosoo
-Skill, guide login, write initial config, and run readiness checks. It should
-not make Cloudflare or Wrangler a default prerequisite.
+Skill, guide login, write initial config, and run readiness checks. Public
+bootstrap defaults to the Mosoo cloud target at `https://api.mosoo.ai`; pass
+`--target local` for a local development API. It should not make Cloudflare or
+Wrangler a default prerequisite.

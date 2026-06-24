@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "name": "mosoo-codex-bootstrap",
+  "channel": "latest",
+  "version": "0.0.0-example",
+  "generatedAt": "2026-06-24T00:00:00Z",
+  "hosts": {
+    "install": "https://install.mosoo.ai",
+    "api": "https://api.mosoo.ai"
+  },
+  "routes": [
+    {
+      "kind": "installer",
+      "publicUrl": "https://install.mosoo.ai/codex",
+      "sourcePath": "publish/installers/codex",
+      "contentType": "text/x-shellscript",
+      "cacheControl": "public, max-age=300"
+    },
+    {
+      "kind": "manifest",
+      "publicUrl": "https://install.mosoo.ai/manifests/codex.json",
+      "sourcePath": "publish/manifests/codex.json",
+      "contentType": "application/json",
+      "cacheControl": "public, max-age=300"
+    },
+    {
+      "kind": "artifact",
+      "publicUrl": "https://install.mosoo.ai/releases/latest/download/mosoo-darwin-arm64.tar.gz",
+      "sourcePath": "release-artifacts/mosoo-darwin-arm64.tar.gz",
+      "archiveRoot": "./",
+      "contentType": "application/gzip",
+      "cacheControl": "public, max-age=300"
+    },
+    {
+      "kind": "artifact",
+      "publicUrl": "https://install.mosoo.ai/releases/latest/download/mosoo-darwin-amd64.tar.gz",
+      "sourcePath": "release-artifacts/mosoo-darwin-amd64.tar.gz",
+      "archiveRoot": "./",
+      "contentType": "application/gzip",
+      "cacheControl": "public, max-age=300"
+    },
+    {
+      "kind": "artifact",
+      "publicUrl": "https://install.mosoo.ai/releases/latest/download/mosoo-linux-arm64.tar.gz",
+      "sourcePath": "release-artifacts/mosoo-linux-arm64.tar.gz",
+      "archiveRoot": "./",
+      "contentType": "application/gzip",
+      "cacheControl": "public, max-age=300"
+    },
+    {
+      "kind": "artifact",
+      "publicUrl": "https://install.mosoo.ai/releases/latest/download/mosoo-linux-amd64.tar.gz",
+      "sourcePath": "release-artifacts/mosoo-linux-amd64.tar.gz",
+      "archiveRoot": "./",
+      "contentType": "application/gzip",
+      "cacheControl": "public, max-age=300"
+    },
+    {
+      "kind": "artifact",
+      "publicUrl": "https://install.mosoo.ai/releases/latest/download/mosoo-skill.tar.gz",
+      "sourcePath": "publish/skills/mosoo",
+      "archiveRoot": "mosoo/",
+      "contentType": "application/gzip",
+      "cacheControl": "public, max-age=300"
+    }
+  ],
+  "installer": {
+    "url": "https://install.mosoo.ai/codex",
+    "sourcePath": "publish/installers/codex",
+    "auditCommand": "curl -fsSL https://install.mosoo.ai/codex -o install-mosoo-codex.sh && less install-mosoo-codex.sh",
+    "runCommand": "curl -fsSL https://install.mosoo.ai/codex | bash"
+  },
+  "defaults": {
+    "target": "cloud",
+    "baseUrl": "https://api.mosoo.ai",
+    "consoleLoginHost": "https://api.mosoo.ai/api",
+    "publicApiLoginHost": "https://api.mosoo.ai/api/v1",
+    "installDir": "$HOME/.local/bin",
+    "skillDir": "$CODEX_HOME/skills/mosoo"
+  },
+  "artifacts": {
+    "releaseBaseUrl": "https://install.mosoo.ai/releases/latest/download",
+    "skill": {
+      "name": "mosoo-skill.tar.gz",
+      "url": "https://install.mosoo.ai/releases/latest/download/mosoo-skill.tar.gz",
+      "sourcePath": "publish/skills/mosoo",
+      "archiveRoot": "mosoo/",
+      "sha256": "REPLACE_WITH_SHA256",
+      "size": 0
+    },
+    "cli": [
+      {
+        "platform": "darwin-arm64",
+        "os": "darwin",
+        "arch": "arm64",
+        "name": "mosoo-darwin-arm64.tar.gz",
+        "url": "https://install.mosoo.ai/releases/latest/download/mosoo-darwin-arm64.tar.gz",
+        "build": {
+          "GOOS": "darwin",
+          "GOARCH": "arm64"
+        },
+        "binary": "mosoo",
+        "sha256": "REPLACE_WITH_SHA256",
+        "size": 0
+      },
+      {
+        "platform": "darwin-amd64",
+        "os": "darwin",
+        "arch": "amd64",
+        "name": "mosoo-darwin-amd64.tar.gz",
+        "url": "https://install.mosoo.ai/releases/latest/download/mosoo-darwin-amd64.tar.gz",
+        "build": {
+          "GOOS": "darwin",
+          "GOARCH": "amd64"
+        },
+        "binary": "mosoo",
+        "sha256": "REPLACE_WITH_SHA256",
+        "size": 0
+      },
+      {
+        "platform": "linux-arm64",
+        "os": "linux",
+        "arch": "arm64",
+        "name": "mosoo-linux-arm64.tar.gz",
+        "url": "https://install.mosoo.ai/releases/latest/download/mosoo-linux-arm64.tar.gz",
+        "build": {
+          "GOOS": "linux",
+          "GOARCH": "arm64"
+        },
+        "binary": "mosoo",
+        "sha256": "REPLACE_WITH_SHA256",
+        "size": 0
+      },
+      {
+        "platform": "linux-amd64",
+        "os": "linux",
+        "arch": "amd64",
+        "name": "mosoo-linux-amd64.tar.gz",
+        "url": "https://install.mosoo.ai/releases/latest/download/mosoo-linux-amd64.tar.gz",
+        "build": {
+          "GOOS": "linux",
+          "GOARCH": "amd64"
+        },
+        "binary": "mosoo",
+        "sha256": "REPLACE_WITH_SHA256",
+        "size": 0
+      }
+    ]
+  },
+  "environment": {
+    "MOSOO_RELEASE_BASE_URL": "https://install.mosoo.ai/releases/latest/download",
+    "MOSOO_TARGET": "cloud",
+    "MOSOO_BASE_URL": "https://api.mosoo.ai"
+  }
+}
