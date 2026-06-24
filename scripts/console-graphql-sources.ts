@@ -1,5 +1,4 @@
 import {
-	agentBuilderGraphQLSpec,
 	agentGraphQLSpec,
 	appGraphQLSpec,
 	channelGraphQLSpec,
@@ -24,7 +23,6 @@ export const excludedMutations = new Set([
 export const moduleGroups: { group: string; spec: { queryFields?: string[]; mutationFields?: string[] } }[] = [
 	{ group: "Common", spec: commonGraphQLSpec },
 	{ group: "Agents", spec: agentGraphQLSpec },
-	{ group: "Builder", spec: agentBuilderGraphQLSpec },
 	{ group: "Channels", spec: channelGraphQLSpec },
 	{ group: "Cost", spec: costGraphQLSpec },
 	{ group: "Environments", spec: environmentGraphQLSpec },

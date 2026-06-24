@@ -1,4 +1,0 @@
-interface:
-  display_name: "mosoo CLI"
-  short_description: "Use the mosoo generated CLI"
-  default_prompt: "Use $mosoo to find and run the right mosoo command."

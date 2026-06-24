@@ -7,3 +7,6 @@ auth:
   validate:
     method: GET
     path: /access-tokens
+
+skill:
+  root: publish/skills/mosoo/references/cli

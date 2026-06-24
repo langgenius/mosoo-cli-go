@@ -9,7 +9,9 @@ import (
 	"github.com/lathe-cli/lathe/pkg/lathe"
 	"github.com/lathe-cli/lathe/pkg/runtime"
 
+	"github.com/langgenius/mosoo-cli-go/internal/doctor"
 	"github.com/langgenius/mosoo-cli-go/internal/generated"
+	"github.com/langgenius/mosoo-cli-go/internal/target"
 )
 
 //go:embed cli.yaml
@@ -23,6 +25,8 @@ func main() {
 	}
 	config.Bind(m)
 	root := lathe.NewApp(m)
+	target.Install(root)
+	root.AddCommand(doctor.NewCommand())
 	if err := generated.MountModules(root); err != nil {
 		os.Exit(runtime.FormatError(err, "table", os.Stderr))
 	}

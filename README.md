@@ -10,15 +10,18 @@ make build
 
 This clones or updates the Mosoo repository under `.cache/mosoo`, exports OpenAPI / GraphQL
 specs, renders `specs/sources.yaml` and `overlays/*.yaml`, runs Lathe code generation, and
-builds `bin/mosoo`.
+builds `bin/mosoo`. Generated CLI reference material is rendered into
+`publish/skills/mosoo/references/cli.md` and `publish/skills/mosoo/references/cli/`;
+the top-level Mosoo Skill entrypoint lives at `publish/skills/mosoo/SKILL.md`.
+
+Lathe is managed by this repository. `make build` first compiles the pinned Lathe CLI from
+`go.mod` into `.cache/bin/lathe`, then uses that local binary for code generation.
 
 Override the API host base baked into per-module defaults:
 
 ```sh
 make build MOSOO_HOST_BASE=https://api.example.com
 ```
-
-Requires Lathe on `PATH` for codegen (`go install github.com/lathe-cli/lathe/cmd/lathe@main`).
 
 ## Install
 
@@ -32,6 +35,27 @@ By default, installation uses `go env GOBIN`, or `$(go env GOPATH)/bin` when
 ```sh
 make install BINDIR="$HOME/.bin"
 ```
+
+## Published Skill layout
+
+The publishable Mosoo Skill is rooted at `publish/skills/mosoo`.
+
+```text
+publish/skills/mosoo/
+|-- SKILL.md
+`-- references/
+    |-- setup.md
+    |-- cli.md
+    |-- api.md
+    `-- cli/
+        |-- catalog.md
+        `-- modules/
+```
+
+`references/cli.md`, `references/cli/catalog.md`, and
+`references/cli/modules/*.md` are generated from Lathe's CLI Skill output during
+`make build`. Treat them as CLI reference material, not as the top-level Mosoo
+Skill.
 
 ## Command layout
 
@@ -53,6 +77,44 @@ Three API surfaces share one deployment but use different URL bases:
 
 Defaults are baked at codegen time (`MOSOO_HOST_BASE`, default `http://127.0.0.1:8787`).
 Override any command with `--hostname` or `$MOSOO_HOST`.
+
+## Target resolution
+
+Generated API commands resolve a default target before falling back to baked-in hostnames.
+Explicit hostname overrides always win:
+
+```text
+--hostname
+  -> MOSOO_HOST
+  -> --target / --base-url
+  -> MOSOO_TARGET / MOSOO_BASE_URL
+  -> project config .mosoo/config.json
+  -> global config ~/.config/mosoo/config.json
+  -> current directory looks like the Mosoo source repo
+  -> default local target
+```
+
+Current builds default to the local Mosoo development stack until Mosoo Cloud API is available:
+
+```json
+{
+  "target": "local",
+  "baseUrl": "http://127.0.0.1:8787"
+}
+```
+
+Cloud is already a supported target shape for later distribution builds or explicit config:
+
+```sh
+mosoo doctor --json --target cloud
+mosoo console user viewer --target custom --base-url https://example.com
+```
+
+Check the resolved target and readiness:
+
+```sh
+mosoo doctor --json
+```
 
 Create a personal access token from the Mosoo web app, then log in once per hostname base
 (same token is fine):

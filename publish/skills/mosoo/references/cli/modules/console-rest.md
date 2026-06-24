@@ -4,7 +4,7 @@
 
 - Backend: `openapi3`
 - Default hostname: `http://127.0.0.1:8787/api`
-- Repository: file:///Users/x/git/lg/mosoo-cli/.cache/mosoo
+- Repository: file:///Users/xiaoke/new_mosoo/mosoo-cli-go/.cache/mosoo
 - Pinned tag: `local-snapshot`
 - Files: `docs/openapi/console-rest.openapi.json`
 - Resolved SHA: `local-snapshot`

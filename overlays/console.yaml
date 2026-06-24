@@ -23,14 +23,6 @@ commands:
     known_errors:
       - status: 401
         cause: "Missing, invalid, or revoked personal access token."
-  agent-builder-messages:
-    short: "Agent builder messages"
-    long: "Agent builder messages via the Mosoo Console GraphQL API (Builder surface). Requires a personal access token logged in to the /api host."
-    notes:
-      - "Uses POST /graphql on the console default hostname (/api)."
-    known_errors:
-      - status: 401
-        cause: "Missing, invalid, or revoked personal access token."
   agent-channel-binding-list:
     short: "List agent channel bindings"
     long: "List agent channel bindings via the Mosoo Console GraphQL API (Channels surface). Requires a personal access token logged in to the /api host."
@@ -322,25 +314,9 @@ commands:
     known_errors:
       - status: 401
         cause: "Missing, invalid, or revoked personal access token."
-  ensure-agent-builder-thread:
-    short: "Ensure an agent builder thread"
-    long: "Ensure an agent builder thread via the Mosoo Console GraphQL API (Builder surface). Requires a personal access token logged in to the /api host."
-    notes:
-      - "Uses POST /graphql on the console default hostname (/api)."
-    known_errors:
-      - status: 401
-        cause: "Missing, invalid, or revoked personal access token."
   environment:
     short: Environment
     long: "Environment via the Mosoo Console GraphQL API (Environments surface). Requires a personal access token logged in to the /api host."
-    notes:
-      - "Uses POST /graphql on the console default hostname (/api)."
-    known_errors:
-      - status: 401
-        cause: "Missing, invalid, or revoked personal access token."
-  execute-agent-builder-control-plane-action:
-    short: "Execute an agent builder control plane action"
-    long: "Execute an agent builder control plane action via the Mosoo Console GraphQL API (Builder surface). Requires a personal access token logged in to the /api host."
     notes:
       - "Uses POST /graphql on the console default hostname (/api)."
     known_errors:
