@@ -1,57 +1,52 @@
-# CLI Reference
+# CLI
 
-Generated from Lathe's mosoo CLI Skill output during `make build`.
+This file is the hand-maintained CLI routing guide for Mosoo. `make build`
+refreshes generated command indexes under `references/cli/` without overwriting
+this guide.
 
-## Runtime State
+## When To Use CLI
 
-Run:
+Use `mosoo` for Mosoo resource operations: setup checks, auth state, App and
+Agent provisioning, publishing, credential setup, Console/API inspection, and
+public Thread API verification.
 
-```sh
-mosoo doctor --json
-```
+For application code that only calls an already published Agent, prefer
+`references/api.md` instead of creating or changing Mosoo resources.
 
-Use the result to decide whether the current task targets local Mosoo runtime or
-Mosoo cloud runtime before running API commands.
+## Required Flow
 
-## Command Selection
+1. Run `mosoo doctor --json` before assuming whether the user is on local mode,
+   cloud mode, or a custom target.
+2. Start with high-level Mosoo CLI workflows when they fit the request.
+3. For generated API commands, search first:
 
-Use generated CLI commands for Mosoo resource operations, and use
-`references/api.md` for application code that calls an already published Agent.
-Do not invent a wrapper command when the generated catalog already exposes the
-operation.
+   ```sh
+   mosoo search "<intent>" --json
+   ```
 
-For a new App, Agent creation, publishing, credential setup, or Console/API
-inspection, search the generated catalog first. For app environment files only,
-derive `MOSOO_API_BASE`, `MOSOO_AGENT_ID`, and `MOSOO_API_TOKEN` from the
-published Agent/API contract instead of creating new resources.
+4. Inspect the exact command before running it:
 
-Use this reference when a user asks you to operate `mosoo`, inspect its API commands, or find the right generated command for an API task.
+   ```sh
+   mosoo commands show <path...> --json
+   ```
 
-## Workflow
+5. Execute only after flags, request body shape, auth requirements, hostname,
+   and output format are clear from `commands show`.
 
-1. Search for candidates with `mosoo search "<intent>" --json`; use `--limit` when needed. Search is only candidate discovery.
-2. Inspect the exact command with `mosoo commands show <path...> --json` before executing an unfamiliar command.
-3. If the command detail has `auth.required=true`, run `mosoo auth status --hostname <host>` before execution. Use `http.default_hostname` when present unless the user provides `--hostname` or `$MOSOO_HOST`.
-4. Execute only after flags, body, auth, HTTP path, and output hints are clear from `commands show`.
+## Generated References
 
-## General Commands
-
-- `mosoo commands --json`: full generated command catalog.
-- `mosoo commands --include-hidden --json`: include hidden generated commands.
-- `mosoo commands show <path...> --json`: source of truth for one command.
-- `mosoo commands schema --json`: catalog schema version for parser compatibility.
-- `mosoo search "<intent>" --json`: ranked candidate commands.
-
-## References
-
-- Read `references/cli/catalog.md` for the command discovery protocol and catalog field meanings.
-- Read `references/cli/modules/console.md` for the `console` module command index.
-- Read `references/cli/modules/console-rest.md` for the `console-rest` module command index.
-- Read `references/cli/modules/public-thread-api.md` for the `public-thread-api` module command index.
+- `references/cli/catalog.md`: generated catalog schema and command selection
+  notes.
+- `references/cli/modules/console.md`: generated Console GraphQL command index.
+- `references/cli/modules/console-rest.md`: generated Console REST command
+  index.
+- `references/cli/modules/public-thread-api.md`: generated public Thread API
+  command index.
 
 ## Rules
 
 - Do not guess flags or request body shape from command names.
-- Do not execute directly from search results; confirm with `commands show` first.
-- Prefer `-o json` for machine-readable command output unless the user asks for human-readable output.
-- Use `--file`, `--set`, or `--set-str` for JSON request bodies according to `commands show` body requirements.
+- Do not execute directly from search results; confirm with `commands show`.
+- Prefer machine-readable output such as `--json` or `-o json`.
+- Use `--file`, `--set`, or `--set-str` according to `commands show` body
+  requirements.

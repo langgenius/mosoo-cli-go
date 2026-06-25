@@ -24,7 +24,6 @@ CONSOLE_SYNC_DIR := .cache/specs-sync/$(CONSOLE_SOURCE_NAME)
 CONSOLE_REST_SYNC_DIR := .cache/specs-sync/$(CONSOLE_REST_SOURCE_NAME)
 OVERLAY_DIR := overlays
 PUBLISH_SKILL_DIR := publish/skills/mosoo
-PUBLISH_CLI_REFERENCE_FILE := $(PUBLISH_SKILL_DIR)/references/cli.md
 PUBLISH_CLI_REFERENCE_DIR := $(PUBLISH_SKILL_DIR)/references/cli
 PUBLISH_CLI_REFERENCE_SKILL_ROOT := $(PUBLISH_CLI_REFERENCE_DIR)
 PUBLISH_CLI_REFERENCE_SKILL_DIR := $(PUBLISH_CLI_REFERENCE_SKILL_ROOT)/mosoo
@@ -38,7 +37,7 @@ help:
 		'make install                Install mosoo to $(BINDIR)/mosoo' \
 		'make tools                  Build local codegen tools under $(TOOLS_DIR)' \
 		'make clean                  Remove generated files and caches' \
-		'Generated CLI reference: $(PUBLISH_CLI_REFERENCE_SKILL_DIR)' \
+		'Generated CLI references: $(PUBLISH_CLI_REFERENCE_DIR)' \
 		'' \
 		'Variables:' \
 		'  MOSOO_REPO=$(MOSOO_REPO)' \
@@ -61,7 +60,7 @@ $(LATHE_BIN): go.mod go.sum
 	$(GO) build -trimpath -o "$@" "$(LATHE_PKG)"
 
 clean:
-	rm -rf .cache bin cmd/mosoo/cli.yaml internal/generated skills "$(PUBLISH_CLI_REFERENCE_FILE)" "$(PUBLISH_CLI_REFERENCE_DIR)" specs/sources.yaml specs/sources.test.yaml overlays
+	rm -rf .cache bin cmd/mosoo/cli.yaml internal/generated skills "$(PUBLISH_CLI_REFERENCE_DIR)" specs/sources.yaml specs/sources.test.yaml overlays
 
 _codegen: $(LATHE_BIN)
 	@mkdir -p .cache specs "$(SYNC_DIR)/docs/openapi" "$(CONSOLE_SYNC_DIR)/docs/graphql" "$(CONSOLE_REST_SYNC_DIR)/docs/openapi"
