@@ -10,6 +10,7 @@ import (
 	"github.com/lathe-cli/lathe/pkg/runtime"
 
 	"github.com/langgenius/mosoo-cli-go/internal/agentmanifest"
+	"github.com/langgenius/mosoo-cli-go/internal/consolecommands"
 	"github.com/langgenius/mosoo-cli-go/internal/doctor"
 	"github.com/langgenius/mosoo-cli-go/internal/generated"
 	"github.com/langgenius/mosoo-cli-go/internal/target"
@@ -30,6 +31,9 @@ func main() {
 	root.AddCommand(agentmanifest.NewCommand())
 	root.AddCommand(doctor.NewCommand())
 	if err := generated.MountModules(root); err != nil {
+		os.Exit(runtime.FormatError(err, "table", os.Stderr))
+	}
+	if err := consolecommands.Install(root); err != nil {
 		os.Exit(runtime.FormatError(err, "table", os.Stderr))
 	}
 	os.Exit(runtime.Execute(root))

@@ -674,6 +674,7 @@ commands:
     example: |
       mosoo console agents update-config --file body.json -o json
     hidden: true
+    ignore: true
     notes:
       - "Raw API command. The product workflow command is `mosoo agent manifest apply`."
       - "Uses POST /graphql on the console default hostname (/api)."

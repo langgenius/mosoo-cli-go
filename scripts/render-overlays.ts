@@ -14,6 +14,7 @@ type OverlayCommand = {
 	long?: string;
 	example?: string;
 	hidden?: boolean;
+	ignore?: boolean;
 	notes?: string[];
 	prerequisites?: string[];
 	known_errors?: { status: number; cause: string }[];
@@ -37,6 +38,7 @@ const consoleCommandOverrides: Record<string, Partial<OverlayCommand>> = {
 		],
 	},
 	"update-agent-config": {
+		ignore: true,
 		use: "update-config",
 		aliases: ["update-agent-config"],
 		short: "Update an agent config",
@@ -298,6 +300,9 @@ function renderOverlay(commands: Record<string, OverlayCommand>): string {
 		}
 		if (command.hidden !== undefined) {
 			lines.push(`    hidden: ${command.hidden ? "true" : "false"}`);
+		}
+		if (command.ignore !== undefined) {
+			lines.push(`    ignore: ${command.ignore ? "true" : "false"}`);
 		}
 		if (command.notes?.length) {
 			lines.push("    notes:");
