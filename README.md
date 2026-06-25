@@ -10,9 +10,10 @@ make build
 
 This clones or updates the Mosoo repository under `.cache/mosoo`, exports OpenAPI / GraphQL
 specs, renders `specs/sources.yaml` and `overlays/*.yaml`, runs Lathe code generation, and
-builds `bin/mosoo`. Generated CLI reference material is rendered into
-`publish/skills/mosoo/references/cli.md` and `publish/skills/mosoo/references/cli/`;
-the top-level Mosoo Skill entrypoint lives at `publish/skills/mosoo/SKILL.md`.
+builds `bin/mosoo`. Generated CLI command indexes are rendered into
+`publish/skills/mosoo/references/cli/`; the hand-maintained CLI guide lives at
+`publish/skills/mosoo/references/cli.md`, and the top-level Mosoo Skill
+entrypoint lives at `publish/skills/mosoo/SKILL.md`.
 
 Lathe is managed by this repository. `make build` first compiles the pinned Lathe CLI from
 `go.mod` into `.cache/bin/lathe`, then uses that local binary for code generation.
@@ -64,9 +65,9 @@ publish/skills/mosoo/
         `-- modules/
 ```
 
-`references/cli.md`, `references/cli/catalog.md`, and
+`references/cli.md` is hand-maintained. `references/cli/catalog.md` and
 `references/cli/modules/*.md` are generated from Lathe's CLI Skill output during
-`make build`. Treat them as CLI reference material, not as the top-level Mosoo
+`make build`. Treat them as CLI command indexes, not as the top-level Mosoo
 Skill.
 
 ## Command layout
