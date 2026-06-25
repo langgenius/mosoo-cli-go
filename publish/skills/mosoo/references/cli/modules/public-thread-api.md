@@ -4,7 +4,7 @@
 
 - Backend: `openapi3`
 - Default hostname: `http://127.0.0.1:8787/api/v1`
-- Repository: file:///Users/x/git/lg/mosoo-cli/.cache/mosoo
+- Repository: https://github.com/langgenius/mosoo.git
 - Pinned tag: `local-snapshot`
 - Files: `docs/openapi/public-thread-api.openapi.json`
 - Resolved SHA: `local-snapshot`
@@ -20,7 +20,7 @@
 - Flags:
   - `--thread-id` (path, required, ulid): Thread ID returned by create thread. v1 IDs are bare ULIDs.
   - `--limit` (query, default `100`): Maximum number of latest Thread events to return.
-- Output: list path `events`; columns `type`, `id`, `content`, `durationMs`, `occurredAt`, `status`; response media `application/json`; pagination `cursor`
+- Output: list path `events`; columns `type`, `id`, `content`, `durationMs`, `occurredAt`, `runId`; response media `application/json`; pagination `cursor`
 - Known errors:
   - HTTP 401: Invalid personal access token.
   - HTTP 404: Thread not found for this caller.

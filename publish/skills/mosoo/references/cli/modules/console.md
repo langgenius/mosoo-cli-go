@@ -4,7 +4,7 @@
 
 - Backend: `graphql`
 - Default hostname: `http://127.0.0.1:8787/api`
-- Repository: file:///Users/x/git/lg/mosoo-cli/.cache/mosoo
+- Repository: https://github.com/langgenius/mosoo.git
 - Pinned tag: `local-snapshot`
 - Schema: `docs/graphql/console.graphql`
 - Expose queries: `accessibleAgentList`, `agent`, `agentChannelBindingList`, `agentCostCard`, `agentEditorState`, `agentManifest`, `agentSessionDiagnostics`, `agentSessionList`, `agentSessionRetrieve`, `appCostCard`, `appEnvironmentList`, `appInfo`, `appList`, `appOverview`, `appSkillList`, `availableAgentModels`, `controlPlaneOverview`, `environment`, `exportAgentPackage`, `fileList`, `listSessionResources`, `mcpOAuthFlowStatus`, `mcpRegistry`, `organizationBillingCostCard`, `session`, `sessionList`, `sessionMessages`, `sessionProcessEvents`, `skillDetail`, `threadAgentSessionList`, `threadAgentSessionRetrieve`, `threadSessionMessages`, `threadSessionProcessEvents`, `vendorCredentialList`, `viewer`

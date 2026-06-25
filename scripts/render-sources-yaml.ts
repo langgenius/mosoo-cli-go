@@ -6,8 +6,7 @@ import { excludedMutations, listFields, moduleGroups } from "./console-graphql-s
 
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(scriptDirectory, "..");
-const mosooDir = resolve(repositoryRoot, ".cache/mosoo");
-const repoURL = `file://${mosooDir}`;
+const repoURL = process.env.MOSOO_REPO_URL ?? "https://github.com/langgenius/mosoo.git";
 const pinnedTag = "local-snapshot";
 const hostBase = (process.env.MOSOO_HOST_BASE ?? "http://127.0.0.1:8787").replace(/\/$/, "");
 const consoleDefaultHostname = `${hostBase}/api`;

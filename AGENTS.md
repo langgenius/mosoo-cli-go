@@ -17,7 +17,7 @@ This repository is a codegen wrapper around Mosoo API specs and Lathe. Do not bl
 - Treat `internal/generated/**`, `cmd/mosoo/cli.yaml`, `specs/sources.yaml`, and `publish/skills/mosoo/references/cli/catalog.md` plus `publish/skills/mosoo/references/cli/modules/*.md` as generated outputs.
 - Prefer changing the source of generation, then regenerate with the existing pipeline.
 - For command help, examples, notes, prerequisites, and known errors, use the overlay pipeline: update `scripts/render-overlays.ts` and/or the relevant `overlays/*.yaml` source path, then run the build pipeline.
-- `publish/skills/mosoo/references/cli.md` is hand-maintained. It is the right place for high-level CLI workflow guidance that should not be generated from Lathe.
+- `publish/skills/mosoo/references/cli.md` is generated from `publish/skills/mosoo/lathe-include/references/cli.md`. Put high-level CLI workflow guidance in the include file, then regenerate.
 - If a required change cannot be expressed through specs, overlays, `cli.yaml`, or existing scripts, first inspect Lathe's supported extension points before editing generated files directly.
 - Generated diffs are acceptable only when they are the intentional output of updated specs, overlays, scripts, or Lathe configuration. Do not include incidental generated churn in unrelated PRs.
 
@@ -37,7 +37,7 @@ This repo pins Lathe through `go.mod` and builds a repo-local binary at `.cache/
   -overlay overlays
 ```
 
-`cli.yaml` sets `skill.root: .cache/lathe-skill`, so Lathe writes the generated full Skill to `.cache/lathe-skill/mosoo`. `scripts/render-publish-skill.ts` then copies only the generated `references/catalog.md` and `references/modules/*.md` into `publish/skills/mosoo/references/cli/`.
+`cli.yaml` sets `skill.root: .cache/lathe-skill`, so Lathe writes the generated full Skill to `.cache/lathe-skill/mosoo`. `scripts/render-publish-skill.ts` then copies `references/cli.md` into `publish/skills/mosoo/references/cli.md` and generated `references/catalog.md` plus `references/modules/*.md` into `publish/skills/mosoo/references/cli/`.
 
 Lathe's relevant commands and flags:
 
