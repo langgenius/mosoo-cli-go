@@ -10,15 +10,18 @@ make build
 
 This clones or updates the Mosoo repository under `.cache/mosoo`, exports OpenAPI / GraphQL
 specs, renders `specs/sources.yaml` and `overlays/*.yaml`, runs Lathe code generation, and
-builds `bin/mosoo`.
+builds `bin/mosoo`. Generated CLI reference material is rendered into
+`publish/skills/mosoo/references/cli.md` and `publish/skills/mosoo/references/cli/`;
+the top-level Mosoo Skill entrypoint lives at `publish/skills/mosoo/SKILL.md`.
+
+Lathe is managed by this repository. `make build` first compiles the pinned Lathe CLI from
+`go.mod` into `.cache/bin/lathe`, then uses that local binary for code generation.
 
 Override the API host base baked into per-module defaults:
 
 ```sh
 make build MOSOO_HOST_BASE=https://api.example.com
 ```
-
-Requires Lathe on `PATH` for codegen (`go install github.com/lathe-cli/lathe/cmd/lathe@main`).
 
 ## Install
 
@@ -32,6 +35,39 @@ By default, installation uses `go env GOBIN`, or `$(go env GOPATH)/bin` when
 ```sh
 make install BINDIR="$HOME/.bin"
 ```
+
+## Bootstrap
+
+The source for the Codex-facing Bootstrap installer lives at
+`publish/installers/codex`. The intended public entrypoint is:
+
+```sh
+curl -fsSL https://install.mosoo.ai/codex | bash
+```
+
+Bootstrap is interactive by default and asks for `y` or `n` before high-impact
+steps. Use `--yes` for automation and `--dry-run` to preview the plan.
+
+## Published Skill layout
+
+The publishable Mosoo Skill is rooted at `publish/skills/mosoo`.
+
+```text
+publish/skills/mosoo/
+|-- SKILL.md
+`-- references/
+    |-- setup.md
+    |-- cli.md
+    |-- api.md
+    `-- cli/
+        |-- catalog.md
+        `-- modules/
+```
+
+`references/cli.md`, `references/cli/catalog.md`, and
+`references/cli/modules/*.md` are generated from Lathe's CLI Skill output during
+`make build`. Treat them as CLI reference material, not as the top-level Mosoo
+Skill.
 
 ## Command layout
 
@@ -54,16 +90,62 @@ Three API surfaces share one deployment but use different URL bases:
 Defaults are baked at codegen time (`MOSOO_HOST_BASE`, default `http://127.0.0.1:8787`).
 Override any command with `--hostname` or `$MOSOO_HOST`.
 
-Create a personal access token from the Mosoo web app, then log in once per hostname base
-(same token is fine):
+## Target resolution
+
+Generated API commands resolve a default target before falling back to baked-in hostnames.
+Explicit hostname overrides always win:
+
+```text
+--hostname
+  -> MOSOO_HOST
+  -> --target / --base-url
+  -> MOSOO_TARGET / MOSOO_BASE_URL
+  -> project config .mosoo/config.json
+  -> global config ~/.config/mosoo/config.json
+  -> current directory looks like the Mosoo source repo
+  -> default local target
+```
+
+Current builds default to the local Mosoo development stack until Mosoo Cloud API is available:
+
+```json
+{
+  "target": "local",
+  "baseUrl": "http://127.0.0.1:8787"
+}
+```
+
+Cloud is already a supported target shape for later distribution builds or explicit config:
 
 ```sh
-mosoo auth login --hostname http://127.0.0.1:8787/api
-mosoo auth login --hostname http://127.0.0.1:8787/api/v1 --skip-validate
+mosoo doctor --json --target cloud
+mosoo console user viewer --target custom --base-url https://example.com
+```
+
+Check the resolved target and readiness:
+
+```sh
+mosoo doctor --json
+```
+
+For local development targets, Bootstrap can sign in through the local development
+backdoor with an `@mosoo.ai` email, create a personal access token, and write the
+CLI credentials for both hostname bases. This only works against a loopback Mosoo
+API with the development backdoor enabled.
+
+For cloud and custom targets, sign in at `https://mosoo.ai`, use a Mosoo API
+token from that logged-in web session, then log in once per hostname base (same
+token is fine):
+
+```sh
+mosoo auth login --hostname https://api.mosoo.ai/api
+mosoo auth login --hostname https://api.mosoo.ai/api/v1 --skip-validate
 ```
 
 `auth login` validates the token against `GET /access-tokens` on the `/api` host.
 The `/api/v1` entry reuses the same credential; `--skip-validate` avoids a 404 on that base.
+The generated `mosoo console-rest access create` command maps to `POST /access-tokens`,
+but it still needs viewer-level authentication; it is not a first-login mechanism by itself.
 
 ## Common commands
 

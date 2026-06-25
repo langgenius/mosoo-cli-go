@@ -9,5 +9,4 @@ auth:
     path: /access-tokens
 
 skill:
-  root: skills
-  # include: 
+  root: publish/skills/mosoo/references/cli
