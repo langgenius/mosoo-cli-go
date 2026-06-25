@@ -9,6 +9,7 @@ import (
 	"github.com/lathe-cli/lathe/pkg/lathe"
 	"github.com/lathe-cli/lathe/pkg/runtime"
 
+	"github.com/langgenius/mosoo-cli-go/internal/agentapp"
 	"github.com/langgenius/mosoo-cli-go/internal/agentmanifest"
 	"github.com/langgenius/mosoo-cli-go/internal/consolecommands"
 	"github.com/langgenius/mosoo-cli-go/internal/doctor"
@@ -28,6 +29,7 @@ func main() {
 	config.Bind(m)
 	root := lathe.NewApp(m)
 	target.Install(root)
+	root.AddCommand(agentapp.NewCommand())
 	root.AddCommand(agentmanifest.NewCommand())
 	root.AddCommand(doctor.NewCommand())
 	if err := generated.MountModules(root); err != nil {
