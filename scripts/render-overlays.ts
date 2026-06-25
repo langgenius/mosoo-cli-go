@@ -8,15 +8,48 @@ const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const overlayDir = resolve(dirname(fileURLToPath(import.meta.url)), "..", "overlays");
 
 type OverlayCommand = {
+	use?: string;
+	aliases?: string[];
 	short?: string;
 	long?: string;
 	example?: string;
+	hidden?: boolean;
 	notes?: string[];
+	prerequisites?: string[];
 	known_errors?: { status: number; cause: string }[];
 };
 
 const exampleFields = new Set(["viewer", "appList", "createApp", "createAgent", "agentSessionList", "sessionList"]);
 const noArticleVerbs = new Set(["set", "poll", "start", "test"]);
+
+const consoleCommandOverrides: Record<string, Partial<OverlayCommand>> = {
+	"agent-manifest": {
+		use: "manifest",
+		aliases: ["agent-manifest"],
+		short: "Get an agent manifest",
+		long:
+			"Read the current remote Agent manifest through the raw Console GraphQL API. Prefer `mosoo agent manifest probe`, `mosoo agent manifest diff`, and `mosoo agent manifest apply` for editable YAML workflows.",
+		example: "mosoo console agents manifest --app-id <app-id> --agent-id <agent-id> -o json",
+		hidden: true,
+		notes: [
+			"Raw API command. The product workflow command is `mosoo agent manifest probe`.",
+			"Uses POST /graphql on the console default hostname (/api).",
+		],
+	},
+	"update-agent-config": {
+		use: "update-config",
+		aliases: ["update-agent-config"],
+		short: "Update an agent config",
+		long:
+			"Update Agent config through the raw Console GraphQL API. Prefer `mosoo agent manifest apply`, which fetches remote state, preserves omitted fields, shows a field-level diff, and supports `--dry-run`.",
+		example: "mosoo console agents update-config --file body.json -o json",
+		hidden: true,
+		notes: [
+			"Raw API command. The product workflow command is `mosoo agent manifest apply`.",
+			"Uses POST /graphql on the console default hostname (/api).",
+		],
+	},
+};
 
 function camelToKebab(value: string): string {
 	return value.replace(/([a-z0-9])([A-Z])/g, "$1-$2").replace(/_/g, "-").toLowerCase();
@@ -140,6 +173,7 @@ function buildConsoleOverlay(): Record<string, OverlayCommand> {
 			...(exampleFields.has(field) ? { example: consoleExample(group, use, flags) } : {}),
 			notes: ["Uses POST /graphql on the console default hostname (/api)."],
 			known_errors: [{ status: 401, cause: "Missing, invalid, or revoked personal access token." }],
+			...consoleCommandOverrides[use],
 		};
 	}
 	return commands;
@@ -244,6 +278,12 @@ function renderOverlay(commands: Record<string, OverlayCommand>): string {
 	const lines = ["commands:"];
 	for (const [use, command] of Object.entries(commands).sort(([a], [b]) => a.localeCompare(b))) {
 		lines.push(`  ${use}:`);
+		if (command.use) {
+			lines.push(`    use: ${yamlQuote(command.use)}`);
+		}
+		if (command.aliases?.length) {
+			lines.push(`    aliases: [${command.aliases.map(yamlQuote).join(", ")}]`);
+		}
 		if (command.short) {
 			lines.push(`    short: ${yamlQuote(command.short)}`);
 		}
@@ -256,10 +296,19 @@ function renderOverlay(commands: Record<string, OverlayCommand>): string {
 				lines.push(`      ${line}`);
 			}
 		}
+		if (command.hidden !== undefined) {
+			lines.push(`    hidden: ${command.hidden ? "true" : "false"}`);
+		}
 		if (command.notes?.length) {
 			lines.push("    notes:");
 			for (const note of command.notes) {
 				lines.push(`      - ${yamlQuote(note)}`);
+			}
+		}
+		if (command.prerequisites?.length) {
+			lines.push("    prerequisites:");
+			for (const prerequisite of command.prerequisites) {
+				lines.push(`      - ${yamlQuote(prerequisite)}`);
 			}
 		}
 		if (command.known_errors?.length) {
