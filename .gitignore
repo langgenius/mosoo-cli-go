@@ -2,4 +2,3 @@
 bin/
 cmd/mosoo/cli.yaml
 internal/generated/
-specs/sources.yaml
