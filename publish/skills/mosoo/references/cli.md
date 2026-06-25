@@ -34,6 +34,27 @@ Use this reference when a user asks you to operate `mosoo`, inspect its API comm
 3. If the command detail has `auth.required=true`, run `mosoo auth status --hostname <host>` before execution. Use `http.default_hostname` when present unless the user provides `--hostname` or `$MOSOO_HOST`.
 4. Execute only after flags, body, auth, HTTP path, and output hints are clear from `commands show`.
 
+## Agent Config Updates
+
+Agent config updates are full-manifest updates. The service intentionally
+expects the complete Agent manifest/YAML on each update so coding agents keep a
+single consistent source of truth.
+
+Before changing an Agent prompt, model, provider, tools, runtime, or
+environment:
+
+1. Pull the current Agent manifest with `mosoo console agents agent-manifest`.
+2. Save the manifest/YAML locally and edit only the fields requested by the
+   user.
+3. Preserve unchanged fields, including `environmentId`, runtime, provider,
+   model, skill IDs, MCP server IDs, and `providerOptions`.
+4. Submit the complete updated config; do not send a partial patch or a payload
+   reconstructed from guessed defaults.
+5. Pull the manifest again after the update and compare the changed fields.
+
+If the current manifest cannot be pulled, stop and report the blocker instead
+of inferring required fields from command names, old examples, or memory.
+
 ## General Commands
 
 - `mosoo commands --json`: full generated command catalog.
@@ -55,3 +76,5 @@ Use this reference when a user asks you to operate `mosoo`, inspect its API comm
 - Do not execute directly from search results; confirm with `commands show` first.
 - Prefer `-o json` for machine-readable command output unless the user asks for human-readable output.
 - Use `--file`, `--set`, or `--set-str` for JSON request bodies according to `commands show` body requirements.
+- Do not update Agent config by guessing required fields. Always round-trip the
+  current Agent manifest/YAML and preserve unchanged values.

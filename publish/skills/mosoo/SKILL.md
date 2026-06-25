@@ -29,6 +29,9 @@ separate agent runtime.
 - New app, Agent creation, publishing, credential setup, or Console/API
   inspection: use `references/cli.md`, then run `mosoo search ... --json` and
   `mosoo commands show <path...> --json` before executing generated commands.
+- Agent configuration changes: follow the manifest round-trip workflow in
+  `references/cli.md`; pull the current Agent manifest/YAML first, edit it
+  locally, and submit the complete updated config.
 - App env file only: derive `MOSOO_API_BASE`, `MOSOO_AGENT_ID`, and
   `MOSOO_API_TOKEN` from the published Agent/API contract; do not create
   Mosoo resources unless the user asked for that.
@@ -44,3 +47,6 @@ separate agent runtime.
 - Do not require Cloudflare or Wrangler for basic Mosoo setup.
 - Prefer machine-readable CLI output such as `--json` before making environment
   or auth decisions.
+- Do not construct Agent config update payloads from memory or guessed fields.
+  Preserve the existing manifest values unless the user explicitly asks to
+  change them.

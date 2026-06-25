@@ -67,6 +67,7 @@
   - `--agent-id` (variable, required): agentId
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
+  - Pull this before changing Agent config; treat the returned manifest/YAML as the source of truth.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
 
@@ -258,6 +259,7 @@ mosoo console agents create-agent \
   - `--input-app-id` (variable, required): input.appId
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
+  - Agent config updates are full-manifest updates: pull agent-manifest first, preserve unchanged environment/runtime/provider/tool fields, and submit the complete updated config.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
 

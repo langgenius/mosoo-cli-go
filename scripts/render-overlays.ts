@@ -129,6 +129,19 @@ function consoleExample(group: string, use: string, flags: string[]): string {
 	return `${prefix} \\\n  ${flags.map((flag) => `--${flag} <value>`).join(" \\\n  ")}`;
 }
 
+function consoleNotes(field: string): string[] {
+	const notes = ["Uses POST /graphql on the console default hostname (/api)."];
+	if (field === "agentManifest") {
+		notes.push("Pull this before changing Agent config; treat the returned manifest/YAML as the source of truth.");
+	}
+	if (field === "updateAgentConfig") {
+		notes.push(
+			"Agent config updates are full-manifest updates: pull agent-manifest first, preserve unchanged environment/runtime/provider/tool fields, and submit the complete updated config.",
+		);
+	}
+	return notes;
+}
+
 function buildConsoleOverlay(): Record<string, OverlayCommand> {
 	const commands: Record<string, OverlayCommand> = {};
 	for (const { group, field } of collectConsoleGraphQLOperations()) {
@@ -138,7 +151,7 @@ function buildConsoleOverlay(): Record<string, OverlayCommand> {
 			short: humanizeGraphQLField(field),
 			long: `${humanizeGraphQLField(field)} via the Mosoo Console GraphQL API (${group} surface). Requires a personal access token logged in to the /api host.`,
 			...(exampleFields.has(field) ? { example: consoleExample(group, use, flags) } : {}),
-			notes: ["Uses POST /graphql on the console default hostname (/api)."],
+			notes: consoleNotes(field),
 			known_errors: [{ status: 401, cause: "Missing, invalid, or revoked personal access token." }],
 		};
 	}

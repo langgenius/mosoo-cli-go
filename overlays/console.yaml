@@ -52,6 +52,7 @@ commands:
     long: "Agent manifest via the Mosoo Console GraphQL API (Agents surface). Requires a personal access token logged in to the /api host."
     notes:
       - "Uses POST /graphql on the console default hostname (/api)."
+      - "Pull this before changing Agent config; treat the returned manifest/YAML as the source of truth."
     known_errors:
       - status: 401
         cause: "Missing, invalid, or revoked personal access token."
@@ -665,6 +666,7 @@ commands:
     long: "Update an agent config via the Mosoo Console GraphQL API (Agents surface). Requires a personal access token logged in to the /api host."
     notes:
       - "Uses POST /graphql on the console default hostname (/api)."
+      - "Agent config updates are full-manifest updates: pull agent-manifest first, preserve unchanged environment/runtime/provider/tool fields, and submit the complete updated config."
     known_errors:
       - status: 401
         cause: "Missing, invalid, or revoked personal access token."
