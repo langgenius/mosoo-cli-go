@@ -65,7 +65,7 @@ func TestPlanManifestUpdatePreservesOmittedFields(t *testing.T) {
 		},
 	}
 
-	changes, finalInput, err := planManifestUpdate(remote, local)
+	changes, finalInput, err := planManifestUpdate(remote, local, "", "")
 	if err != nil {
 		t.Fatalf("planManifestUpdate: %v", err)
 	}
@@ -177,7 +177,7 @@ func TestPlanManifestUpdateReplacesArrays(t *testing.T) {
 		"skillIds": []any{},
 	}
 
-	changes, finalInput, err := planManifestUpdate(remote, local)
+	changes, finalInput, err := planManifestUpdate(remote, local, "", "")
 	if err != nil {
 		t.Fatalf("planManifestUpdate: %v", err)
 	}
@@ -186,6 +186,57 @@ func TestPlanManifestUpdateReplacesArrays(t *testing.T) {
 	}
 	if got := changePaths(changes); !reflect.DeepEqual(got, []string{"/skillIds"}) {
 		t.Fatalf("change paths = %#v", got)
+	}
+}
+
+func TestPlanManifestUpdateRoundTripsExportedManifest(t *testing.T) {
+	remote := map[string]any{
+		"sourceAgentId":   "ag_123",
+		"manifestVersion": "mosoo.agent.manifest.v1",
+		"kind":            "pet",
+		"metadata": map[string]any{
+			"name":        "Portable Agent",
+			"description": nil,
+		},
+		"runtime": map[string]any{
+			"id":              "openai-runtime",
+			"provider":        "openai",
+			"model":           "gpt-5.4-mini",
+			"providerOptions": map[string]any{},
+		},
+		"prompts": map[string]any{
+			"system": "Line one\nLine two",
+		},
+		"skills":     []any{},
+		"mcpServers": []any{},
+		"environment": map[string]any{
+			"environmentId": "env_1",
+			"expectedName":  "System Default",
+			"setupScript":   "",
+			"envVars":       map[string]any{},
+		},
+	}
+	local := deepCopyMap(remote)
+	local["prompts"].(map[string]any)["system"] = "Line one\nLine two\n"
+
+	changes, finalInput, err := planManifestUpdate(remote, local, "app_123", "ag_123")
+	if err != nil {
+		t.Fatalf("planManifestUpdate: %v", err)
+	}
+	if got := changePaths(changes); len(got) != 0 {
+		t.Fatalf("change paths = %#v, want none", got)
+	}
+	if finalInput["appId"] != "app_123" || finalInput["agentId"] != "ag_123" {
+		t.Fatalf("ids = %v / %v", finalInput["appId"], finalInput["agentId"])
+	}
+	if got := finalInput["skillIds"]; !reflect.DeepEqual(got, []any{}) {
+		t.Fatalf("skillIds = %#v", got)
+	}
+	if got := finalInput["mcpServerIds"]; !reflect.DeepEqual(got, []any{}) {
+		t.Fatalf("mcpServerIds = %#v", got)
+	}
+	if err := validateUpdateInput(finalInput); err != nil {
+		t.Fatalf("validateUpdateInput: %v", err)
 	}
 }
 

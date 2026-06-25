@@ -205,7 +205,7 @@ func runDiff(cmd *cobra.Command, opts *commandOptions) error {
 	if err != nil {
 		return err
 	}
-	changes, _, err := planManifestUpdate(remote.Manifest, localManifest)
+	changes, _, err := planManifestUpdate(remote.Manifest, localManifest, appID, agentID)
 	if err != nil {
 		return err
 	}
@@ -233,7 +233,7 @@ func runApply(cmd *cobra.Command, opts *commandOptions) error {
 	if err != nil {
 		return err
 	}
-	changes, finalInput, err := planManifestUpdate(remote.Manifest, localManifest)
+	changes, finalInput, err := planManifestUpdate(remote.Manifest, localManifest, appID, agentID)
 	if err != nil {
 		return err
 	}
@@ -364,16 +364,27 @@ func consoleClientOptions(cmd *cobra.Command) (string, latheruntime.ClientOption
 	return host, opts, nil
 }
 
-func planManifestUpdate(remoteManifestMap, localManifest map[string]any) ([]change, map[string]any, error) {
+func planManifestUpdate(remoteManifestMap, localManifest map[string]any, appID, agentID string) ([]change, map[string]any, error) {
 	remoteInput := updateInputFromManifest(remoteManifestMap)
+	ensureUpdateIDs(remoteInput, appID, agentID)
 	localPatchSource, err := patchSource(localManifest)
 	if err != nil {
 		return nil, nil, err
 	}
 	localPatch := updateInputFromManifest(localPatchSource)
 	finalInput := mergeMaps(remoteInput, localPatch)
+	ensureUpdateIDs(finalInput, appID, agentID)
 	changes := diffValues(remoteInput, finalInput)
 	return changes, finalInput, nil
+}
+
+func ensureUpdateIDs(input map[string]any, appID, agentID string) {
+	if _, ok := input["appId"]; !ok && appID != "" {
+		input["appId"] = appID
+	}
+	if _, ok := input["agentId"]; !ok && agentID != "" {
+		input["agentId"] = agentID
+	}
 }
 
 func readManifestFile(path string) (map[string]any, error) {
@@ -518,14 +529,14 @@ func updateInputFromManifest(manifest map[string]any) map[string]any {
 	copyIfPresent(out, source, "mcpServerIds")
 	copyIfPresent(out, source, "model")
 	copyIfPresent(out, source, "name")
-	copyIfPresent(out, source, "prompt")
+	copyPromptIfPresent(out, source, "prompt")
 	copyIfPresent(out, source, "provider")
 	copyIfPresent(out, source, "providerOptions")
 	copyIfPresent(out, source, "runtimeId")
 	copyIfPresent(out, source, "skillIds")
 	copyIfPresent(out, source, "builtInTools")
 	if prompts, ok := objectAt(source, "prompts"); ok {
-		copyRenameIfPresent(out, prompts, "system", "prompt")
+		copyPromptRenameIfPresent(out, prompts, "system", "prompt")
 	}
 	if runtime, ok := objectAt(source, "runtime"); ok {
 		copyRenameIfPresent(out, runtime, "id", "runtimeId")
@@ -546,17 +557,17 @@ func updateInputFromManifest(manifest map[string]any) map[string]any {
 		out["environment"] = map[string]any{"environmentId": environmentID}
 	}
 	if _, ok := out["skillIds"]; !ok {
-		if ids := idsFromObjectArray(source["skills"], "skillId"); len(ids) > 0 {
+		if ids, ok := idsFromObjectArray(source["skills"], "skillId"); ok {
 			out["skillIds"] = ids
 		}
 	}
 	if _, ok := out["mcpServerIds"]; !ok {
-		if ids := idsFromObjectArray(source["mcpBindings"], "serverId"); len(ids) > 0 {
+		if ids, ok := idsFromObjectArray(source["mcpBindings"], "serverId"); ok {
 			out["mcpServerIds"] = ids
 		}
 	}
 	if _, ok := out["mcpServerIds"]; !ok {
-		if ids := idsFromObjectArray(source["mcpServers"], "serverId"); len(ids) > 0 {
+		if ids, ok := idsFromObjectArray(source["mcpServers"], "serverId"); ok {
 			out["mcpServerIds"] = ids
 		}
 	}
@@ -722,10 +733,30 @@ func copyIfPresent(out, source map[string]any, key string) {
 	}
 }
 
+func copyPromptIfPresent(out, source map[string]any, key string) {
+	if value, ok := source[key]; ok {
+		out[key] = normalizePromptValue(value)
+	}
+}
+
 func copyRenameIfPresent(out, source map[string]any, from, to string) {
 	if value, ok := source[from]; ok {
 		out[to] = deepCopyValue(value)
 	}
+}
+
+func copyPromptRenameIfPresent(out, source map[string]any, from, to string) {
+	if value, ok := source[from]; ok {
+		out[to] = normalizePromptValue(value)
+	}
+}
+
+func normalizePromptValue(value any) any {
+	text, ok := value.(string)
+	if !ok {
+		return deepCopyValue(value)
+	}
+	return strings.TrimSuffix(text, "\n")
 }
 
 func objectAt(value map[string]any, path ...string) (map[string]any, bool) {
@@ -782,10 +813,10 @@ func stringValue(value any, fallback string) string {
 	return text
 }
 
-func idsFromObjectArray(value any, field string) []any {
+func idsFromObjectArray(value any, field string) ([]any, bool) {
 	items, ok := value.([]any)
 	if !ok {
-		return nil
+		return nil, false
 	}
 	ids := make([]any, 0, len(items))
 	for _, item := range items {
@@ -799,7 +830,7 @@ func idsFromObjectArray(value any, field string) []any {
 			}
 		}
 	}
-	return ids
+	return ids, true
 }
 
 func deepCopyMap(value map[string]any) map[string]any {
