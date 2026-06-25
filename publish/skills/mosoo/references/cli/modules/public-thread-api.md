@@ -158,4 +158,3 @@
   - `--thread-id` (path, required, ulid): Thread ID returned by create thread. v1 IDs are bare ULIDs.
 - Output: response media `application/json`
 - Example: `mosoo public-thread-api threads unarchive --thread-id <thread-id>`
-

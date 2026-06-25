@@ -56,20 +56,6 @@
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
 
-### `mosoo console agents agent-manifest`
-
-- Summary: Agent manifest
-- HTTP: `POST /graphql`
-- Auth: required
-- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
-- Flags:
-  - `--app-id` (variable, required): appId
-  - `--agent-id` (variable, required): agentId
-- Notes:
-  - Uses POST /graphql on the console default hostname (/api).
-- Known errors:
-  - HTTP 401: Missing, invalid, or revoked personal access token.
-
 ### `mosoo console agents create-agent`
 
 - Summary: Create an agent
@@ -231,31 +217,6 @@ mosoo console agents create-agent \
 - Flags:
   - `--app-id` (variable, required): appId
   - `--agent-id` (variable, required): agentId
-- Notes:
-  - Uses POST /graphql on the console default hostname (/api).
-- Known errors:
-  - HTTP 401: Missing, invalid, or revoked personal access token.
-
-### `mosoo console agents update-agent-config`
-
-- Summary: Update an agent config
-- HTTP: `POST /graphql`
-- Auth: required
-- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
-- Flags:
-  - `--input-agent-id` (variable, required): input.agentId
-  - `--input-description` (variable): input.description
-  - `--input-environment-environment-id` (variable): input.environment.environmentId
-  - `--input-kind` (variable, required, one of: pet|cattle): input.kind
-  - `--input-mcp-server-ids` (variable, required): input.mcpServerIds
-  - `--input-model` (variable, required): input.model
-  - `--input-name` (variable, required): input.name
-  - `--input-prompt` (variable, required): input.prompt
-  - `--input-provider` (variable, required): input.provider
-  - `--input-provider-options` (variable, required): input.providerOptions
-  - `--input-runtime-id` (variable, required): input.runtimeId
-  - `--input-skill-ids` (variable, required): input.skillIds
-  - `--input-app-id` (variable, required): input.appId
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
@@ -1353,4 +1314,3 @@ mosoo console apps create-app \
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
 - Example: `mosoo console user viewer`
-

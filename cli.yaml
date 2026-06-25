@@ -10,3 +10,4 @@ auth:
 
 skill:
   root: publish/skills/mosoo/references/cli
+  include: publish/skills/mosoo/lathe-include
