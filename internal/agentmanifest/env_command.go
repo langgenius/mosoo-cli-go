@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/langgenius/mosoo-cli-go/internal/target"
+	latheconfig "github.com/lathe-cli/lathe/pkg/config"
 	"github.com/spf13/cobra"
 )
 
@@ -42,7 +43,7 @@ func newEnvCommand() *cobra.Command {
 	envCmd := &cobra.Command{
 		Use:   "env",
 		Short: "Export or write public Agent API environment values",
-		Long:  "Export or write MOSOO_API_BASE, MOSOO_AGENT_ID, and MOSOO_API_TOKEN for backend and Worker integrations. Token values are redacted in terminal output.",
+		Long:  "Export or write MOSOO_API_BASE, MOSOO_AGENT_ID, and MOSOO_API_TOKEN for backend and Worker integrations. If no token is provided, the logged-in Public API host token is used. Token values are redacted in terminal output.",
 	}
 
 	exportOpts := &envCommandOptions{}
@@ -97,7 +98,7 @@ func newEnvCommand() *cobra.Command {
 func addEnvValueFlags(cmd *cobra.Command, opts *envCommandOptions) {
 	cmd.Flags().StringVar(&opts.apiBase, "api-base", "", "Public API base URL (defaults to MOSOO_API_BASE or the resolved target public API host)")
 	cmd.Flags().StringVar(&opts.agentID, "agent-id", "", "Published Mosoo Agent ID (defaults to MOSOO_AGENT_ID)")
-	cmd.Flags().StringVar(&opts.apiToken, "api-token", "", "Mosoo API token (defaults to MOSOO_API_TOKEN)")
+	cmd.Flags().StringVar(&opts.apiToken, "api-token", "", "Mosoo API token (defaults to MOSOO_API_TOKEN or the logged-in Public API host token)")
 	cmd.Flags().BoolVar(&opts.json, "json", false, "Print machine-readable JSON")
 }
 
@@ -114,10 +115,34 @@ func resolveEnvValues(cmd *cobra.Command, opts *envCommandOptions) (envValues, e
 		}
 		values.APIBase = resolved.Hosts[target.SurfacePublicThreadAPI]
 	}
+	if values.APIToken == "" {
+		token, err := apiTokenFromAuthStore(values.APIBase)
+		if err != nil {
+			return envValues{}, err
+		}
+		values.APIToken = token
+	}
 	if err := validateEnvValues(values); err != nil {
 		return envValues{}, err
 	}
 	return values, nil
+}
+
+func apiTokenFromAuthStore(apiBase string) (string, error) {
+	hosts, err := latheconfig.LoadHosts()
+	if err != nil {
+		return "", fmt.Errorf("load Mosoo auth hosts: %w", err)
+	}
+	entry, ok := hosts.Get(apiBase)
+	if !ok {
+		return "", nil
+	}
+	switch strings.TrimSpace(entry.AuthType) {
+	case "", "bearer":
+		return strings.TrimSpace(entry.OAuthToken), nil
+	default:
+		return "", nil
+	}
 }
 
 func validateEnvValues(values envValues) error {

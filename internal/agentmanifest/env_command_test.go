@@ -114,6 +114,33 @@ func TestAgentEnvJSONRedactsToken(t *testing.T) {
 	}
 }
 
+func TestAgentEnvWriteFallsBackToLoggedInPublicAPIHostToken(t *testing.T) {
+	cmd, stdout, stderr := newAgentCommandForEnvTest(t)
+	envFile := filepath.Join(t.TempDir(), ".env.local")
+	writeTestHostsFile(t, "https://api.mosoo.ai/api/v1", testAPIToken)
+
+	cmd.SetArgs([]string{
+		"env", "write",
+		"--file", envFile,
+		"--api-base", "https://api.mosoo.ai/api/v1",
+		"--agent-id", "agent_123",
+	})
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("Execute: %v", err)
+	}
+
+	data, err := os.ReadFile(envFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	gotFile := string(data)
+	if !strings.Contains(gotFile, "MOSOO_API_TOKEN="+testAPIToken+"\n") {
+		t.Fatalf("env file missing logged-in token:\n%s", gotFile)
+	}
+	assertDoesNotContainToken(t, stdout.String(), "stdout")
+	assertDoesNotContainToken(t, stderr.String(), "stderr")
+}
+
 func TestAgentEnvExportJSONRedactsToken(t *testing.T) {
 	cmd, stdout, stderr := newAgentCommandForEnvTest(t)
 
@@ -162,6 +189,21 @@ func newAgentCommandForEnvTest(t *testing.T) (*cobra.Command, *bytes.Buffer, *by
 	cmd.SetOut(&stdout)
 	cmd.SetErr(&stderr)
 	return cmd, &stdout, &stderr
+}
+
+func writeTestHostsFile(t *testing.T, host, token string) {
+	t.Helper()
+	configDir := os.Getenv("MOSOO_CONFIG_DIR")
+	if configDir == "" {
+		t.Fatal("MOSOO_CONFIG_DIR is not set")
+	}
+	if err := os.MkdirAll(configDir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	data := []byte(host + ":\n  auth_type: bearer\n  oauth_token: " + token + "\n")
+	if err := os.WriteFile(filepath.Join(configDir, "hosts.yml"), data, 0o600); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func assertDoesNotContainToken(t *testing.T, got, stream string) {
