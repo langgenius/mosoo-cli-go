@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/langgenius/mosoo-cli-go/internal/buildinfo"
 	"github.com/langgenius/mosoo-cli-go/internal/target"
 	latheconfig "github.com/lathe-cli/lathe/pkg/config"
+	"github.com/lathe-cli/lathe/pkg/lathe"
 )
 
 func bindTestManifest(t *testing.T) {
@@ -70,13 +70,16 @@ func TestCheckAuthRequiresCloudCredentials(t *testing.T) {
 }
 
 func TestReportJSONHasStructuredReadinessSections(t *testing.T) {
-	buildinfo.Version = "v1.2.3"
-	buildinfo.Commit = "abcdef123456"
-	buildinfo.Date = "2026-06-25T10:32:19Z"
+	oldVersion := lathe.Version
+	oldCommit := lathe.Commit
+	oldDate := lathe.Date
+	lathe.Version = "v1.2.3"
+	lathe.Commit = "abcdef123456"
+	lathe.Date = "2026-06-25T10:32:19Z"
 	t.Cleanup(func() {
-		buildinfo.Version = "dev"
-		buildinfo.Commit = "none"
-		buildinfo.Date = "unknown"
+		lathe.Version = oldVersion
+		lathe.Commit = oldCommit
+		lathe.Date = oldDate
 	})
 
 	auth := AuthState{

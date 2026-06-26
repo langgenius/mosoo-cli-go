@@ -1,15 +1,11 @@
 package buildinfo
 
+import "github.com/lathe-cli/lathe/pkg/lathe"
+
 const (
 	defaultVersion = "dev"
 	defaultCommit  = "none"
 	defaultDate    = "unknown"
-)
-
-var (
-	Version = defaultVersion
-	Commit  = defaultCommit
-	Date    = defaultDate
 )
 
 type Info struct {
@@ -20,9 +16,9 @@ type Info struct {
 }
 
 func Current() Info {
-	version := valueOrDefault(Version, defaultVersion)
-	commit := valueOrDefault(Commit, defaultCommit)
-	date := valueOrDefault(Date, defaultDate)
+	version := valueOrDefault(lathe.Version, defaultVersion)
+	commit := valueOrDefault(lathe.Commit, defaultCommit)
+	date := valueOrDefault(lathe.Date, defaultDate)
 	return Info{
 		Version:  version,
 		Commit:   commit,

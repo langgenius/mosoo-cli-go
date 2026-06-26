@@ -10,7 +10,6 @@ import (
 	"github.com/lathe-cli/lathe/pkg/runtime"
 
 	"github.com/langgenius/mosoo-cli-go/internal/agentmanifest"
-	"github.com/langgenius/mosoo-cli-go/internal/buildinfo"
 	"github.com/langgenius/mosoo-cli-go/internal/consolecommands"
 	"github.com/langgenius/mosoo-cli-go/internal/doctor"
 	"github.com/langgenius/mosoo-cli-go/internal/generated"
@@ -26,10 +25,6 @@ func main() {
 		fmt.Fprintf(os.Stderr, "load cli.yaml: %v\n", err)
 		os.Exit(1)
 	}
-	info := buildinfo.Current()
-	lathe.Version = info.Version
-	lathe.Commit = info.Commit
-	lathe.Date = info.Date
 	config.Bind(m)
 	root := lathe.NewApp(m)
 	target.Install(root)

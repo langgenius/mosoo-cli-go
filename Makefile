@@ -3,11 +3,11 @@ BUN ?= bun
 MOSOO_REPO ?= https://github.com/langgenius/mosoo.git
 MOSOO_REF ?= main
 MOSOO_HOST_BASE ?= http://127.0.0.1:8787
-MODULE := github.com/langgenius/mosoo-cli-go
+LATHE_MODULE := github.com/lathe-cli/lathe/pkg/lathe
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || printf dev)
 COMMIT ?= $(shell git rev-parse --short=12 HEAD 2>/dev/null || printf none)
 BUILD_DATE ?= $(shell git show -s --format=%cI HEAD 2>/dev/null || printf unknown)
-GO_LDFLAGS ?= -X '$(MODULE)/internal/buildinfo.Version=$(VERSION)' -X '$(MODULE)/internal/buildinfo.Commit=$(COMMIT)' -X '$(MODULE)/internal/buildinfo.Date=$(BUILD_DATE)'
+GO_LDFLAGS ?= -X '$(LATHE_MODULE).Version=$(VERSION)' -X '$(LATHE_MODULE).Commit=$(COMMIT)' -X '$(LATHE_MODULE).Date=$(BUILD_DATE)'
 EXPECTED_VERSION_OUTPUT := mosoo $(VERSION) ($(COMMIT), $(BUILD_DATE))
 
 GOBIN := $(shell $(GO) env GOBIN)

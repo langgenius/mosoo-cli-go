@@ -19,7 +19,8 @@ Skill entrypoint lives at `publish/skills/mosoo/SKILL.md`.
 Lathe is managed by this repository. `make build` first compiles the pinned Lathe CLI from
 `go.mod` into `.cache/bin/lathe`, then uses that local binary for code generation.
 
-Builds inject deterministic CLI version metadata from Git:
+Builds inject deterministic CLI version metadata from Git into Lathe's standard
+`Version`, `Commit`, and `Date` fields:
 
 ```text
 VERSION=$(git describe --tags --always --dirty)

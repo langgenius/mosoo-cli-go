@@ -249,7 +249,7 @@ func actionForCode(code string) string {
 	case "auth_missing_credentials":
 		return "Run mosoo auth login for every host listed in auth.missingHosts."
 	case "build_metadata_missing":
-		return "Build the CLI through the Makefile or inject Version, Commit, and Date with Go ldflags."
+		return "Build the CLI through the Makefile or inject Lathe Version, Commit, and Date with Go ldflags."
 	default:
 		return "Inspect the failed check message and correct the environment before retrying."
 	}
