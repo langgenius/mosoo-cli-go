@@ -76,9 +76,13 @@ Use this workflow when a task starts from App and Agent setup instead of an
 already published Agent. It is a product workflow assembled from generated
 commands plus the env and Public Thread workflows below.
 
-First create or reuse the App, create the Agent, and publish it. Run the
-generated commands in order and save each returned `appId` and `agentId` before
-moving to the next step:
+First select the App boundary. For a new application, create a new App. Reuse
+an existing App only when the user explicitly supplied its `appId`, or when its
+name and purpose exactly match the current application after live verification.
+Existing credentials or a working model are not sufficient reasons to reuse an
+App. After the App boundary is selected, create the Agent and publish it. Run
+the generated commands in order and save each returned `appId` and `agentId`
+before moving to the next step:
 
 ```sh
 mosoo console apps app-list --organization-id <organization-id> -o json
