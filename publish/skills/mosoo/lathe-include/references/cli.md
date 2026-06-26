@@ -49,6 +49,8 @@ When writing app env files, store token values only in backend or Worker
 environment files and redact token values in logs, examples, and command
 output.
 
+Use `mosoo agent env export` or `mosoo agent env write --file <path>` to prepare `MOSOO_API_BASE`, `MOSOO_AGENT_ID`, and `MOSOO_API_TOKEN` for backend or Worker workflows.
+
 ## Workflow
 
 1. Search for candidates with `mosoo search "<intent>" --json`; use `--limit` when needed. Search is only candidate discovery.
