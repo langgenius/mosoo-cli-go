@@ -85,12 +85,36 @@ shape and host selection. If a step fails or times out, inspect state with
 `console-rest files get-upload` before retrying. Use `console-rest files
 abort-upload` only for a pending upload that should not be completed.
 
+## Public Thread Wait, Final Output, And Transcript Workflow
+
+```sh
+mosoo public-thread-api threads create --agent-id <agent-id> --file body.json --wait -o json
+mosoo public-thread-api threads create --agent-id <agent-id> --file body.json --final-output
+mosoo public-thread-api events wait --thread-id <thread-id> --final-output
+mosoo public-thread-api threads transcript --thread-id <thread-id>
+```
+
 ## Workflow
 
 1. Search for candidates with `mosoo search "<intent>" --json`; use `--limit` when needed. Search is only candidate discovery.
 2. Inspect the exact command with `mosoo commands show <path...> --json` before executing an unfamiliar command.
 3. If the command detail has `auth.required=true`, run `mosoo auth status --hostname <host>` before execution. Use `http.default_hostname` when present unless the user provides `--hostname` or `$MOSOO_HOST`.
 4. Execute only after flags, body, auth, HTTP path, and output hints are clear from `commands show`.
+
+## Host Context
+
+Use `mosoo doctor --json` first when the target is not explicit. It reports the
+resolved target, base URL, and per-surface hosts. Console GraphQL and console
+REST commands use the `/api` surface. Public Thread API commands use the
+`/api/v1` surface.
+
+Use `--target local` or `--target cloud` for built-in targets. Use `--target
+custom --base-url <service-root>` for a non-default deployment so the CLI derives
+the correct surface hosts. Use `--hostname <surface-host>` or `MOSOO_HOST` only
+when overriding one exact surface host.
+
+For runnable examples covering `--target`, `--base-url`, `--hostname`, and
+`MOSOO_HOST`, read `references/cli/host-context.md`.
 
 ## General Commands
 

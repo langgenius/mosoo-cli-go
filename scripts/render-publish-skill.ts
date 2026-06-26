@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -7,6 +7,7 @@ const repositoryRoot = resolve(scriptDirectory, "..");
 const skillRoot = resolve(repositoryRoot, "publish/skills/mosoo");
 const generatedSkillRoot = resolve(repositoryRoot, ".cache/lathe-skill/mosoo");
 const generatedReferencesRoot = resolve(generatedSkillRoot, "references");
+const generatedCliReferenceRoot = resolve(generatedReferencesRoot, "cli");
 const outputReferenceRoot = resolve(skillRoot, "references/cli");
 const outputCliGuide = resolve(skillRoot, "references/cli.md");
 
@@ -32,12 +33,24 @@ async function normalizeMarkdownTree(path: string): Promise<void> {
 	}
 }
 
-await mkdir(outputReferenceRoot, { recursive: true });
+async function pathExists(path: string): Promise<boolean> {
+	try {
+		await stat(path);
+		return true;
+	} catch (error) {
+		if (error instanceof Error && "code" in error && error.code === "ENOENT") {
+			return false;
+		}
+		throw error;
+	}
+}
 
-await rm(resolve(outputReferenceRoot, "catalog.md"), { force: true });
-await rm(resolve(outputReferenceRoot, "modules"), { force: true, recursive: true });
-await rm(resolve(outputReferenceRoot, "mosoo"), { force: true, recursive: true });
+await rm(outputReferenceRoot, { force: true, recursive: true });
+await mkdir(outputReferenceRoot, { recursive: true });
 await cp(resolve(generatedReferencesRoot, "cli.md"), outputCliGuide);
+if (await pathExists(generatedCliReferenceRoot)) {
+	await cp(generatedCliReferenceRoot, outputReferenceRoot, { recursive: true });
+}
 await cp(resolve(generatedReferencesRoot, "catalog.md"), resolve(outputReferenceRoot, "catalog.md"));
 await cp(resolve(generatedReferencesRoot, "modules"), resolve(outputReferenceRoot, "modules"), { recursive: true });
 await normalizeMarkdown(outputCliGuide);
