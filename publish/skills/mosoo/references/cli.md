@@ -51,6 +51,23 @@ output.
 
 Use `mosoo agent env export` or `mosoo agent env write --file <path>` to prepare `MOSOO_API_BASE`, `MOSOO_AGENT_ID`, and `MOSOO_API_TOKEN` for backend or Worker workflows; when `MOSOO_API_TOKEN` is unset, the helper uses the token from `mosoo auth login` for the selected Public API host.
 
+## Agent App Provisioning Workflow
+
+For App and Agent setup, run the generated commands in order and save each
+returned ID before moving to the next step:
+
+```sh
+mosoo console apps app-list --organization-id <organization-id> -o json
+mosoo console apps create-app --input-organization-id <organization-id> --input-name <app-name> -o json
+mosoo console agents create-agent --file create-agent.json -o json
+mosoo console agents publish-agent --input-app-id <app-id> --input-agent-id <agent-id> -o json
+```
+
+Use `mosoo commands show <path...> --json` before each command to confirm body
+shape and required flags. Prefer `--file` for large Agent create bodies. If a
+step fails or times out, inspect state with `console apps app-list`, `console
+agents accessible-agent-list`, or `console agents agent` before retrying.
+
 ## Workflow
 
 1. Search for candidates with `mosoo search "<intent>" --json`; use `--limit` when needed. Search is only candidate discovery.
