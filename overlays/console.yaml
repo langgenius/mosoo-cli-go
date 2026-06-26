@@ -48,9 +48,15 @@ commands:
       - status: 401
         cause: "Missing, invalid, or revoked personal access token."
   agent-manifest:
-    short: "Agent manifest"
-    long: "Agent manifest via the Mosoo Console GraphQL API (Agents surface). Requires a personal access token logged in to the /api host."
+    use: manifest
+    aliases: [agent-manifest]
+    short: "Get an agent manifest"
+    long: "Read the current remote Agent manifest through the raw Console GraphQL API. Prefer `mosoo agent manifest probe`, `mosoo agent manifest diff`, and `mosoo agent manifest apply` for editable YAML workflows."
+    example: |
+      mosoo console agents manifest --app-id <app-id> --agent-id <agent-id> -o json
+    hidden: true
     notes:
+      - "Raw API command. The product workflow command is `mosoo agent manifest probe`."
       - "Uses POST /graphql on the console default hostname (/api)."
       - "Pull this before changing Agent config; treat the returned manifest/YAML as the source of truth."
     known_errors:
@@ -662,9 +668,16 @@ commands:
       - status: 401
         cause: "Missing, invalid, or revoked personal access token."
   update-agent-config:
+    use: update-config
+    aliases: [update-agent-config]
     short: "Update an agent config"
-    long: "Update an agent config via the Mosoo Console GraphQL API (Agents surface). Requires a personal access token logged in to the /api host."
+    long: "Update Agent config through the raw Console GraphQL API. Prefer `mosoo agent manifest apply`, which fetches remote state, preserves omitted fields, shows a field-level diff, and supports `--dry-run`."
+    example: |
+      mosoo console agents update-config --file body.json -o json
+    hidden: true
+    ignore: true
     notes:
+      - "Raw API command. The product workflow command is `mosoo agent manifest apply`."
       - "Uses POST /graphql on the console default hostname (/api)."
       - "Agent config updates are full-manifest updates: pull agent-manifest first, preserve unchanged environment/runtime/provider/tool fields, and submit the complete updated config."
     known_errors:

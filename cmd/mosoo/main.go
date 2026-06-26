@@ -9,8 +9,11 @@ import (
 	"github.com/lathe-cli/lathe/pkg/lathe"
 	"github.com/lathe-cli/lathe/pkg/runtime"
 
+	"github.com/langgenius/mosoo-cli-go/internal/agentmanifest"
+	"github.com/langgenius/mosoo-cli-go/internal/consolecommands"
 	"github.com/langgenius/mosoo-cli-go/internal/doctor"
 	"github.com/langgenius/mosoo-cli-go/internal/generated"
+	"github.com/langgenius/mosoo-cli-go/internal/publicthreads"
 	"github.com/langgenius/mosoo-cli-go/internal/target"
 )
 
@@ -26,8 +29,15 @@ func main() {
 	config.Bind(m)
 	root := lathe.NewApp(m)
 	target.Install(root)
+	root.AddCommand(agentmanifest.NewCommand())
 	root.AddCommand(doctor.NewCommand())
 	if err := generated.MountModules(root); err != nil {
+		os.Exit(runtime.FormatError(err, "table", os.Stderr))
+	}
+	if err := consolecommands.Install(root); err != nil {
+		os.Exit(runtime.FormatError(err, "table", os.Stderr))
+	}
+	if err := publicthreads.Install(root); err != nil {
 		os.Exit(runtime.FormatError(err, "table", os.Stderr))
 	}
 	os.Exit(runtime.Execute(root))

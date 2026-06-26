@@ -9,6 +9,7 @@ SKILL_DIR="${MOSOO_SKILL_DIR:-$CODEX_HOME_VALUE/skills/mosoo}"
 SOURCE_ROOT="${MOSOO_BOOTSTRAP_SOURCE_ROOT:-}"
 CLI_ARCHIVE_URL="${MOSOO_CLI_ARCHIVE_URL:-}"
 SKILL_ARCHIVE_URL="${MOSOO_SKILL_ARCHIVE_URL:-}"
+CLI_VERSION="${MOSOO_CLI_VERSION:-}"
 CLI_SHA256="${MOSOO_CLI_SHA256:-}"
 SKILL_SHA256="${MOSOO_SKILL_SHA256:-}"
 TARGET="${MOSOO_TARGET:-cloud}"
@@ -49,9 +50,9 @@ Options:
       --source-root DIR     Install from a local mosoo-cli-go checkout for development.
       --cli-url URL         Download CLI archive from URL.
       --skill-url URL       Download Skill archive from URL.
-      --target TARGET       Write initial target config: local, cloud, or custom. Default runtime target: cloud.
+      --target TARGET       Runtime target for login and doctor: local, cloud, or custom. Default: cloud.
       --base-url URL        Base URL for --target custom, or override local/cloud base URL.
-      --write-config        Write global Mosoo target config.
+      --write-config        Write the selected target and base URL to global Mosoo config.
       --no-cli              Skip CLI install/update.
       --no-skill            Skip Skill install/update.
       --no-login            Skip auth login.
@@ -62,6 +63,7 @@ Options:
 Environment:
   MOSOO_CLI_ARCHIVE_URL     Override CLI release archive URL.
   MOSOO_SKILL_ARCHIVE_URL   Override Skill release archive URL.
+  MOSOO_CLI_VERSION         Expected mosoo --version value, for example v1.2.3.
   MOSOO_API_TOKEN           Token used for non-interactive mosoo auth login.
   MOSOO_DEV_EMAIL           @mosoo.ai email used for local development login.
   MOSOO_LOGIN_URL           Web login URL shown when cloud login needs user action.
@@ -274,6 +276,7 @@ install_cli() {
 		log "CLI source: ${source_binary:-$url}${source_binary:+" (local)"}"
 		run mkdir -p "$BIN_DIR"
 		run install -m 0755 "${source_binary:-mosoo}" "$BIN_DIR/mosoo"
+		verify_installed_cli
 		return
 	fi
 
@@ -297,6 +300,31 @@ install_cli() {
 		*":$BIN_DIR:"*) ;;
 		*) warn "$BIN_DIR is not on PATH; add it before running mosoo from a new shell" ;;
 	esac
+
+	verify_installed_cli
+}
+
+verify_installed_cli() {
+	local mosoo output
+
+	if "$DRY_RUN"; then
+		print_cmd "$BIN_DIR/mosoo" --version
+		return
+	fi
+
+	mosoo="$(resolve_mosoo_binary)"
+	output="$("$mosoo" --version)" || die "installed mosoo failed to print version"
+	case "$output" in
+		"mosoo "*" ("*", "*) ;;
+		*) die "installed mosoo printed an unexpected version string: $output" ;;
+	esac
+	if [ -n "$CLI_VERSION" ]; then
+		case "$output" in
+			"mosoo $CLI_VERSION ("*) ;;
+			*) die "installed mosoo version mismatch: expected $CLI_VERSION, got $output" ;;
+		esac
+	fi
+	log "verified CLI: $output"
 }
 
 install_skill() {
@@ -543,6 +571,7 @@ Platform: $platform
 Install/update CLI: $INSTALL_CLI
   Target: $BIN_DIR/mosoo
   Source: $cli_source
+  Expected version: ${CLI_VERSION:-any build metadata}
 Install/update Skill: $INSTALL_SKILL
   Target: $SKILL_DIR
   Source: $skill_source
@@ -565,8 +594,8 @@ parse_args() {
 			--source-root) shift; [ "$#" -gt 0 ] || die "--source-root requires a value"; SOURCE_ROOT="$1" ;;
 			--cli-url) shift; [ "$#" -gt 0 ] || die "--cli-url requires a value"; CLI_ARCHIVE_URL="$1" ;;
 			--skill-url) shift; [ "$#" -gt 0 ] || die "--skill-url requires a value"; SKILL_ARCHIVE_URL="$1" ;;
-			--target) shift; [ "$#" -gt 0 ] || die "--target requires a value"; TARGET="$1"; WRITE_CONFIG=true ;;
-			--base-url) shift; [ "$#" -gt 0 ] || die "--base-url requires a value"; BASE_URL="$1"; WRITE_CONFIG=true ;;
+			--target) shift; [ "$#" -gt 0 ] || die "--target requires a value"; TARGET="$1" ;;
+			--base-url) shift; [ "$#" -gt 0 ] || die "--base-url requires a value"; BASE_URL="$1" ;;
 			--write-config) WRITE_CONFIG=true ;;
 			--no-cli) INSTALL_CLI=false ;;
 			--no-skill) INSTALL_SKILL=false ;;
@@ -595,7 +624,7 @@ main() {
 	if "$INSTALL_SKILL" && confirm "Install or update Mosoo Skill at $SKILL_DIR?" "y"; then
 		install_skill
 	fi
-	if "$WRITE_CONFIG" && confirm "Write Mosoo target config?" "n"; then
+	if "$WRITE_CONFIG" && confirm "Write Mosoo target config?" "y"; then
 		write_target_config
 	fi
 	if "$RUN_LOGIN" && confirm "Run Mosoo auth login now?" "y"; then

@@ -52,6 +52,17 @@ type Resolution struct {
 	ExplicitHostname string            `json:"explicitHostname,omitempty"`
 }
 
+type State struct {
+	Name             string            `json:"name"`
+	Source           string            `json:"source"`
+	BaseURL          string            `json:"baseUrl"`
+	Hosts            map[string]string `json:"hosts"`
+	ConfigPath       string            `json:"configPath,omitempty"`
+	ProjectRoot      string            `json:"projectRoot,omitempty"`
+	ExplicitHostname string            `json:"explicitHostname,omitempty"`
+	Local            bool              `json:"local"`
+}
+
 type fileConfig struct {
 	Target       string `json:"target"`
 	BaseURL      string `json:"baseUrl"`
@@ -168,6 +179,19 @@ func ResolveExplicitHostname(hostname, source string) (Resolution, error) {
 		Hosts:            HostsForBaseURL(baseURL),
 		ExplicitHostname: h,
 	}, nil
+}
+
+func StateFromResolution(resolved Resolution) State {
+	return State{
+		Name:             resolved.Target,
+		Source:           resolved.Source,
+		BaseURL:          resolved.BaseURL,
+		Hosts:            resolved.Hosts,
+		ConfigPath:       resolved.ConfigPath,
+		ProjectRoot:      resolved.ProjectRoot,
+		ExplicitHostname: resolved.ExplicitHostname,
+		Local:            IsLocalBaseURL(resolved.BaseURL),
+	}
 }
 
 func HasExplicitHostname(cmd *cobra.Command) bool {

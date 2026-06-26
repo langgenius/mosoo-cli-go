@@ -1,12 +1,14 @@
 package doctor
 
 import (
+	"encoding/json"
 	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/langgenius/mosoo-cli-go/internal/target"
 	latheconfig "github.com/lathe-cli/lathe/pkg/config"
+	"github.com/lathe-cli/lathe/pkg/lathe"
 )
 
 func bindTestManifest(t *testing.T) {
@@ -64,5 +66,96 @@ func TestCheckAuthRequiresCloudCredentials(t *testing.T) {
 	}
 	if !strings.Contains(check.Message, "not authenticated") {
 		t.Fatalf("check.Message = %q, want missing auth message", check.Message)
+	}
+}
+
+func TestReportJSONHasStructuredReadinessSections(t *testing.T) {
+	oldVersion := lathe.Version
+	oldCommit := lathe.Commit
+	oldDate := lathe.Date
+	lathe.Version = "v1.2.3"
+	lathe.Commit = "abcdef123456"
+	lathe.Date = "2026-06-25T10:32:19Z"
+	t.Cleanup(func() {
+		lathe.Version = oldVersion
+		lathe.Commit = oldCommit
+		lathe.Date = oldDate
+	})
+
+	auth := AuthState{
+		Required:        true,
+		Authenticated:   false,
+		CredentialHosts: []string{},
+		MissingHosts: []string{
+			"https://api.mosoo.ai/api",
+			"https://api.mosoo.ai/api/v1",
+		},
+	}
+	report := NewReport(target.Resolution{
+		Target:  target.CloudTarget,
+		Source:  target.SourceTargetFlag,
+		BaseURL: target.DefaultCloudBaseURL,
+		Hosts:   target.HostsForBaseURL(target.DefaultCloudBaseURL),
+	}, Check{
+		Name:    "api",
+		OK:      true,
+		Code:    "api_reachable",
+		Message: "GET https://api.mosoo.ai/api/access-tokens returned 401 Unauthorized",
+	}, auth)
+
+	raw, err := json.Marshal(report)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var got map[string]any
+	if err := json.Unmarshal(raw, &got); err != nil {
+		t.Fatal(err)
+	}
+
+	if got["schemaVersion"] != float64(1) {
+		t.Fatalf("schemaVersion = %v, want 1", got["schemaVersion"])
+	}
+	if got["ready"] != false {
+		t.Fatalf("ready = %v, want false", got["ready"])
+	}
+
+	targetState := got["target"].(map[string]any)
+	if targetState["name"] != target.CloudTarget {
+		t.Fatalf("target.name = %v", targetState["name"])
+	}
+	if targetState["baseUrl"] != target.DefaultCloudBaseURL {
+		t.Fatalf("target.baseUrl = %v", targetState["baseUrl"])
+	}
+
+	authState := got["auth"].(map[string]any)
+	if authState["required"] != true {
+		t.Fatalf("auth.required = %v", authState["required"])
+	}
+	if authState["authenticated"] != false {
+		t.Fatalf("auth.authenticated = %v", authState["authenticated"])
+	}
+	if len(authState["missingHosts"].([]any)) != 2 {
+		t.Fatalf("auth.missingHosts = %v", authState["missingHosts"])
+	}
+
+	installState := got["install"].(map[string]any)
+	if installState["version"] != "v1.2.3" {
+		t.Fatalf("install.version = %v", installState["version"])
+	}
+	if installState["complete"] != true {
+		t.Fatalf("install.complete = %v", installState["complete"])
+	}
+
+	failures := got["failures"].([]any)
+	if len(failures) != 1 {
+		t.Fatalf("failures len = %d, want 1: %v", len(failures), failures)
+	}
+	failure := failures[0].(map[string]any)
+	if failure["code"] != "auth_missing_credentials" {
+		t.Fatalf("failure.code = %v", failure["code"])
+	}
+	if failure["action"] == "" {
+		t.Fatal("failure.action is empty")
 	}
 }

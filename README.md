@@ -11,12 +11,25 @@ make build
 This clones or updates the Mosoo repository under `.cache/mosoo`, exports OpenAPI / GraphQL
 specs, renders `specs/sources.yaml` and `overlays/*.yaml`, runs Lathe code generation, and
 builds `bin/mosoo`. Generated CLI command indexes are rendered into
-`publish/skills/mosoo/references/cli/`; the hand-maintained CLI guide lives at
-`publish/skills/mosoo/references/cli.md`, and the top-level Mosoo Skill
-entrypoint lives at `publish/skills/mosoo/SKILL.md`.
+`publish/skills/mosoo/references/cli/`; the CLI guide at
+`publish/skills/mosoo/references/cli.md` is rendered from Lathe Skill include
+resources under `publish/skills/mosoo/lathe-include/`; and the top-level Mosoo
+Skill entrypoint lives at `publish/skills/mosoo/SKILL.md`.
 
 Lathe is managed by this repository. `make build` first compiles the pinned Lathe CLI from
 `go.mod` into `.cache/bin/lathe`, then uses that local binary for code generation.
+
+Builds inject deterministic CLI version metadata from Git into Lathe's standard
+`Version`, `Commit`, and `Date` fields:
+
+```text
+VERSION=$(git describe --tags --always --dirty)
+COMMIT=$(git rev-parse --short=12 HEAD)
+BUILD_DATE=$(git show -s --format=%cI HEAD)
+```
+
+Override `VERSION`, `COMMIT`, or `BUILD_DATE` for release builds when the
+release pipeline has already computed those values.
 
 Override the API host base baked into per-module defaults:
 
@@ -36,6 +49,9 @@ By default, installation uses `go env GOBIN`, or `$(go env GOPATH)/bin` when
 ```sh
 make install BINDIR="$HOME/.bin"
 ```
+
+`make install` runs `make verify-install`, which checks that the installed
+binary's `mosoo --version` output exactly matches the build metadata.
 
 ## Bootstrap
 
@@ -65,10 +81,11 @@ publish/skills/mosoo/
         `-- modules/
 ```
 
-`references/cli.md` is hand-maintained. `references/cli/catalog.md` and
+`references/cli.md`, `references/cli/catalog.md`, and
 `references/cli/modules/*.md` are generated from Lathe's CLI Skill output during
-`make build`. Treat them as CLI command indexes, not as the top-level Mosoo
-Skill.
+`make build`. To change the guide text in `references/cli.md`, edit the matching
+Lathe include file under `lathe-include/`. Treat the module files as CLI command
+indexes, not as the top-level Mosoo Skill.
 
 ## Command layout
 
@@ -128,6 +145,11 @@ Check the resolved target and readiness:
 ```sh
 mosoo doctor --json
 ```
+
+The JSON output is versioned with `schemaVersion` and groups machine-readable
+readiness data under `target`, `auth`, `install`, `checks`, and `failures`.
+Failure entries include stable `code` and `action` fields so automation can
+branch without parsing human messages.
 
 For local development targets, Bootstrap can sign in through the local development
 backdoor with an `@mosoo.ai` email, create a personal access token, and write the

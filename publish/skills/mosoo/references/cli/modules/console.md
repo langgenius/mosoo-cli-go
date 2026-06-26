@@ -4,7 +4,7 @@
 
 - Backend: `graphql`
 - Default hostname: `http://127.0.0.1:8787/api`
-- Repository: file:///Users/x/git/lg/mosoo-cli/.cache/mosoo
+- Repository: https://github.com/langgenius/mosoo.git
 - Pinned tag: `local-snapshot`
 - Schema: `docs/graphql/console.graphql`
 - Expose queries: `accessibleAgentList`, `agent`, `agentChannelBindingList`, `agentCostCard`, `agentEditorState`, `agentManifest`, `agentSessionDiagnostics`, `agentSessionList`, `agentSessionRetrieve`, `appCostCard`, `appEnvironmentList`, `appInfo`, `appList`, `appOverview`, `appSkillList`, `availableAgentModels`, `controlPlaneOverview`, `environment`, `exportAgentPackage`, `fileList`, `listSessionResources`, `mcpOAuthFlowStatus`, `mcpRegistry`, `organizationBillingCostCard`, `session`, `sessionList`, `sessionMessages`, `sessionProcessEvents`, `skillDetail`, `threadAgentSessionList`, `threadAgentSessionRetrieve`, `threadSessionMessages`, `threadSessionProcessEvents`, `vendorCredentialList`, `viewer`
@@ -53,21 +53,6 @@
   - `--agent-id` (variable, required): agentId
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
-- Known errors:
-  - HTTP 401: Missing, invalid, or revoked personal access token.
-
-### `mosoo console agents agent-manifest`
-
-- Summary: Agent manifest
-- HTTP: `POST /graphql`
-- Auth: required
-- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
-- Flags:
-  - `--app-id` (variable, required): appId
-  - `--agent-id` (variable, required): agentId
-- Notes:
-  - Uses POST /graphql on the console default hostname (/api).
-  - Pull this before changing Agent config; treat the returned manifest/YAML as the source of truth.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
 
@@ -234,32 +219,6 @@ mosoo console agents create-agent \
   - `--agent-id` (variable, required): agentId
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
-- Known errors:
-  - HTTP 401: Missing, invalid, or revoked personal access token.
-
-### `mosoo console agents update-agent-config`
-
-- Summary: Update an agent config
-- HTTP: `POST /graphql`
-- Auth: required
-- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
-- Flags:
-  - `--input-agent-id` (variable, required): input.agentId
-  - `--input-description` (variable): input.description
-  - `--input-environment-environment-id` (variable): input.environment.environmentId
-  - `--input-kind` (variable, required, one of: pet|cattle): input.kind
-  - `--input-mcp-server-ids` (variable, required): input.mcpServerIds
-  - `--input-model` (variable, required): input.model
-  - `--input-name` (variable, required): input.name
-  - `--input-prompt` (variable, required): input.prompt
-  - `--input-provider` (variable, required): input.provider
-  - `--input-provider-options` (variable, required): input.providerOptions
-  - `--input-runtime-id` (variable, required): input.runtimeId
-  - `--input-skill-ids` (variable, required): input.skillIds
-  - `--input-app-id` (variable, required): input.appId
-- Notes:
-  - Uses POST /graphql on the console default hostname (/api).
-  - Agent config updates are full-manifest updates: pull agent-manifest first, preserve unchanged environment/runtime/provider/tool fields, and submit the complete updated config.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
 
@@ -1355,4 +1314,3 @@ mosoo console apps create-app \
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
 - Example: `mosoo console user viewer`
-

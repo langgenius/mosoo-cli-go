@@ -2,3 +2,4 @@
 bin/
 cmd/mosoo/cli.yaml
 internal/generated/
+/mosoo-experience-report-*.md
