@@ -104,6 +104,45 @@ func TestResolveDetectsMosooSourceRoot(t *testing.T) {
 	}
 }
 
+func TestStateFromResolutionStructuresMachineFields(t *testing.T) {
+	resolved := Resolution{
+		Target:           CustomTarget,
+		Source:           SourceTargetFlag,
+		BaseURL:          "https://example.com",
+		Hosts:            HostsForBaseURL("https://example.com"),
+		ConfigPath:       "/tmp/mosoo/config.json",
+		ProjectRoot:      "/tmp/mosoo",
+		ExplicitHostname: "example.com/api",
+	}
+
+	state := StateFromResolution(resolved)
+
+	if state.Name != CustomTarget {
+		t.Fatalf("Name = %q, want %q", state.Name, CustomTarget)
+	}
+	if state.Source != SourceTargetFlag {
+		t.Fatalf("Source = %q, want %q", state.Source, SourceTargetFlag)
+	}
+	if state.BaseURL != "https://example.com" {
+		t.Fatalf("BaseURL = %q", state.BaseURL)
+	}
+	if state.Hosts[SurfaceConsoleREST] != "https://example.com/api" {
+		t.Fatalf("console-rest host = %q", state.Hosts[SurfaceConsoleREST])
+	}
+	if state.ConfigPath != "/tmp/mosoo/config.json" {
+		t.Fatalf("ConfigPath = %q", state.ConfigPath)
+	}
+	if state.ProjectRoot != "/tmp/mosoo" {
+		t.Fatalf("ProjectRoot = %q", state.ProjectRoot)
+	}
+	if state.ExplicitHostname != "example.com/api" {
+		t.Fatalf("ExplicitHostname = %q", state.ExplicitHostname)
+	}
+	if state.Local {
+		t.Fatal("Local = true, want false")
+	}
+}
+
 func TestInstallSetsHostnameForGeneratedSurface(t *testing.T) {
 	configDir := filepath.Join(t.TempDir(), "config")
 	bindTestManifest(t, configDir)

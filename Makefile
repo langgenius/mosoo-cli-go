@@ -3,6 +3,12 @@ BUN ?= bun
 MOSOO_REPO ?= https://github.com/langgenius/mosoo.git
 MOSOO_REF ?= main
 MOSOO_HOST_BASE ?= http://127.0.0.1:8787
+MODULE := github.com/langgenius/mosoo-cli-go
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || printf dev)
+COMMIT ?= $(shell git rev-parse --short=12 HEAD 2>/dev/null || printf none)
+BUILD_DATE ?= $(shell git show -s --format=%cI HEAD 2>/dev/null || printf unknown)
+GO_LDFLAGS ?= -X '$(MODULE)/internal/buildinfo.Version=$(VERSION)' -X '$(MODULE)/internal/buildinfo.Commit=$(COMMIT)' -X '$(MODULE)/internal/buildinfo.Date=$(BUILD_DATE)'
+EXPECTED_VERSION_OUTPUT := mosoo $(VERSION) ($(COMMIT), $(BUILD_DATE))
 
 GOBIN := $(shell $(GO) env GOBIN)
 GOPATH := $(shell $(GO) env GOPATH)
@@ -27,12 +33,13 @@ PUBLISH_SKILL_DIR := publish/skills/mosoo
 PUBLISH_CLI_REFERENCE_DIR := $(PUBLISH_SKILL_DIR)/references/cli
 
 .DEFAULT_GOAL := help
-.PHONY: help build install clean tools _codegen
+.PHONY: help build install verify-install clean tools _codegen
 
 help:
 	@printf '%s\n' \
 		'make build                  Generate and build bin/mosoo' \
 		'make install                Install mosoo to $(BINDIR)/mosoo' \
+		'make verify-install        Verify $(BINDIR)/mosoo reports this build metadata' \
 		'make tools                  Build local codegen tools under $(TOOLS_DIR)' \
 		'make clean                  Remove generated files and caches' \
 		'Generated CLI references: $(PUBLISH_CLI_REFERENCE_DIR)' \
@@ -41,15 +48,28 @@ help:
 		'  MOSOO_REPO=$(MOSOO_REPO)' \
 		'  MOSOO_REF=$(MOSOO_REF)' \
 		'  MOSOO_HOST_BASE=$(MOSOO_HOST_BASE)' \
+		'  VERSION=$(VERSION)' \
+		'  COMMIT=$(COMMIT)' \
+		'  BUILD_DATE=$(BUILD_DATE)' \
 		'  BINDIR=$(BINDIR)'
 
 build: _codegen
 	cp cli.yaml cmd/mosoo/cli.yaml
-	$(GO) build -trimpath -o bin/mosoo ./cmd/mosoo
+	$(GO) build -trimpath -ldflags "$(GO_LDFLAGS)" -o bin/mosoo ./cmd/mosoo
 
 install: build
 	mkdir -p "$(BINDIR)"
 	install -m 0755 bin/mosoo "$(BINDIR)/mosoo"
+	$(MAKE) verify-install
+
+verify-install:
+	@test -x "$(BINDIR)/mosoo" || { echo "$(BINDIR)/mosoo is not installed or executable" >&2; exit 1; }
+	@test "$$("$(BINDIR)/mosoo" --version)" = "$(EXPECTED_VERSION_OUTPUT)" || { \
+		echo "installed mosoo version mismatch" >&2; \
+		echo "expected: $(EXPECTED_VERSION_OUTPUT)" >&2; \
+		echo "actual:   $$("$(BINDIR)/mosoo" --version)" >&2; \
+		exit 1; \
+	}
 
 tools: $(LATHE_BIN)
 

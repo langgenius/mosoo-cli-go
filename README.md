@@ -19,6 +19,17 @@ Skill entrypoint lives at `publish/skills/mosoo/SKILL.md`.
 Lathe is managed by this repository. `make build` first compiles the pinned Lathe CLI from
 `go.mod` into `.cache/bin/lathe`, then uses that local binary for code generation.
 
+Builds inject deterministic CLI version metadata from Git:
+
+```text
+VERSION=$(git describe --tags --always --dirty)
+COMMIT=$(git rev-parse --short=12 HEAD)
+BUILD_DATE=$(git show -s --format=%cI HEAD)
+```
+
+Override `VERSION`, `COMMIT`, or `BUILD_DATE` for release builds when the
+release pipeline has already computed those values.
+
 Override the API host base baked into per-module defaults:
 
 ```sh
@@ -37,6 +48,9 @@ By default, installation uses `go env GOBIN`, or `$(go env GOPATH)/bin` when
 ```sh
 make install BINDIR="$HOME/.bin"
 ```
+
+`make install` runs `make verify-install`, which checks that the installed
+binary's `mosoo --version` output exactly matches the build metadata.
 
 ## Bootstrap
 
@@ -130,6 +144,11 @@ Check the resolved target and readiness:
 ```sh
 mosoo doctor --json
 ```
+
+The JSON output is versioned with `schemaVersion` and groups machine-readable
+readiness data under `target`, `auth`, `install`, `checks`, and `failures`.
+Failure entries include stable `code` and `action` fields so automation can
+branch without parsing human messages.
 
 For local development targets, Bootstrap can sign in through the local development
 backdoor with an `@mosoo.ai` email, create a personal access token, and write the

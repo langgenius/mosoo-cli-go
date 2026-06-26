@@ -35,6 +35,7 @@ curl -fsSL https://install.mosoo.ai/codex | bash -s -- --dry-run
 Then verify:
 
 ```sh
+mosoo --version
 mosoo doctor --json
 ```
 
@@ -43,3 +44,6 @@ Skill, guide login, write initial config, and run readiness checks. Public
 bootstrap defaults to the Mosoo cloud target at `https://api.mosoo.ai`; pass
 `--target local` for a local development API. It should not make Cloudflare or
 Wrangler a default prerequisite.
+
+Release installers can set `MOSOO_CLI_VERSION` to make Bootstrap fail when the
+installed binary does not report the expected `mosoo --version` build metadata.
