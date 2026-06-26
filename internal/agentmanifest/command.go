@@ -372,6 +372,10 @@ func planManifestUpdate(remoteManifestMap, localManifest map[string]any, appID, 
 		return nil, nil, err
 	}
 	localPatch := updateInputFromManifest(localPatchSource)
+	localPatch, err = omitRedactedPatchValues(localPatch)
+	if err != nil {
+		return nil, nil, err
+	}
 	finalInput := mergeMaps(remoteInput, localPatch)
 	ensureUpdateIDs(finalInput, appID, agentID)
 	changes := diffValues(remoteInput, finalInput)
@@ -379,10 +383,10 @@ func planManifestUpdate(remoteManifestMap, localManifest map[string]any, appID, 
 }
 
 func ensureUpdateIDs(input map[string]any, appID, agentID string) {
-	if _, ok := input["appId"]; !ok && appID != "" {
+	if appID != "" {
 		input["appId"] = appID
 	}
-	if _, ok := input["agentId"]; !ok && agentID != "" {
+	if agentID != "" {
 		input["agentId"] = agentID
 	}
 }
@@ -426,6 +430,9 @@ func parseJSONMap(data []byte) (map[string]any, error) {
 	var out map[string]any
 	if err := json.Unmarshal(data, &out); err != nil {
 		return nil, fmt.Errorf("parse manifest json: %w", err)
+	}
+	if out == nil {
+		return nil, fmt.Errorf("manifest must be a JSON object")
 	}
 	return out, nil
 }
@@ -577,7 +584,8 @@ func updateInputFromManifest(manifest map[string]any) map[string]any {
 func validateUpdateInput(input map[string]any) error {
 	missing := make([]string, 0)
 	for _, field := range requiredUpdateFields {
-		if _, ok := input[field]; !ok {
+		value, ok := input[field]
+		if !ok || value == nil {
 			missing = append(missing, field)
 		}
 	}
@@ -585,6 +593,86 @@ func validateUpdateInput(input map[string]any) error {
 		return fmt.Errorf("manifest cannot build updateAgentConfig input; missing %s", strings.Join(missing, ", "))
 	}
 	return nil
+}
+
+func omitRedactedPatchValues(patch map[string]any) (map[string]any, error) {
+	out := make(map[string]any, len(patch))
+	for key, value := range patch {
+		clean, keep, err := omitRedactedPatchValue(value, "/"+escapeJSONPointer(key))
+		if err != nil {
+			return nil, err
+		}
+		if keep {
+			out[key] = clean
+		}
+	}
+	return out, nil
+}
+
+func omitRedactedPatchValue(value any, path string) (any, bool, error) {
+	switch typed := value.(type) {
+	case string:
+		if isRedactedPlaceholder(typed) {
+			return nil, false, nil
+		}
+		return typed, true, nil
+	case map[string]any:
+		out := make(map[string]any, len(typed))
+		for key, item := range typed {
+			clean, keep, err := omitRedactedPatchValue(item, path+"/"+escapeJSONPointer(key))
+			if err != nil {
+				return nil, false, err
+			}
+			if keep {
+				out[key] = clean
+			}
+		}
+		return out, true, nil
+	case []any:
+		if containsRedactedPlaceholder(typed) {
+			return nil, false, fmt.Errorf("redacted manifest value at %s cannot be merged safely inside an array; replace it with a real value or remove the array field", path)
+		}
+		return deepCopyValue(typed), true, nil
+	default:
+		return deepCopyValue(typed), true, nil
+	}
+}
+
+func containsRedactedPlaceholder(value any) bool {
+	switch typed := value.(type) {
+	case string:
+		return isRedactedPlaceholder(typed)
+	case map[string]any:
+		for _, item := range typed {
+			if containsRedactedPlaceholder(item) {
+				return true
+			}
+		}
+	case []any:
+		for _, item := range typed {
+			if containsRedactedPlaceholder(item) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func isRedactedPlaceholder(value string) bool {
+	trimmed := strings.TrimSpace(value)
+	switch strings.ToLower(trimmed) {
+	case "redacted", "<redacted>", "[redacted]", "(redacted)", "***redacted***":
+		return true
+	}
+	if len(trimmed) < 4 {
+		return false
+	}
+	for _, r := range trimmed {
+		if r != '*' {
+			return false
+		}
+	}
+	return true
 }
 
 func resolveIDs(flagAppID, flagAgentID string, manifest map[string]any) (string, string, error) {
