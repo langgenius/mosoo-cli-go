@@ -50,9 +50,9 @@ Options:
       --source-root DIR     Install from a local mosoo-cli-go checkout for development.
       --cli-url URL         Download CLI archive from URL.
       --skill-url URL       Download Skill archive from URL.
-      --target TARGET       Write initial target config: local, cloud, or custom. Default runtime target: cloud.
+      --target TARGET       Runtime target for login and doctor: local, cloud, or custom. Default: cloud.
       --base-url URL        Base URL for --target custom, or override local/cloud base URL.
-      --write-config        Write global Mosoo target config.
+      --write-config        Write the selected target and base URL to global Mosoo config.
       --no-cli              Skip CLI install/update.
       --no-skill            Skip Skill install/update.
       --no-login            Skip auth login.
@@ -594,8 +594,8 @@ parse_args() {
 			--source-root) shift; [ "$#" -gt 0 ] || die "--source-root requires a value"; SOURCE_ROOT="$1" ;;
 			--cli-url) shift; [ "$#" -gt 0 ] || die "--cli-url requires a value"; CLI_ARCHIVE_URL="$1" ;;
 			--skill-url) shift; [ "$#" -gt 0 ] || die "--skill-url requires a value"; SKILL_ARCHIVE_URL="$1" ;;
-			--target) shift; [ "$#" -gt 0 ] || die "--target requires a value"; TARGET="$1"; WRITE_CONFIG=true ;;
-			--base-url) shift; [ "$#" -gt 0 ] || die "--base-url requires a value"; BASE_URL="$1"; WRITE_CONFIG=true ;;
+			--target) shift; [ "$#" -gt 0 ] || die "--target requires a value"; TARGET="$1" ;;
+			--base-url) shift; [ "$#" -gt 0 ] || die "--base-url requires a value"; BASE_URL="$1" ;;
 			--write-config) WRITE_CONFIG=true ;;
 			--no-cli) INSTALL_CLI=false ;;
 			--no-skill) INSTALL_SKILL=false ;;
@@ -624,7 +624,7 @@ main() {
 	if "$INSTALL_SKILL" && confirm "Install or update Mosoo Skill at $SKILL_DIR?" "y"; then
 		install_skill
 	fi
-	if "$WRITE_CONFIG" && confirm "Write Mosoo target config?" "n"; then
+	if "$WRITE_CONFIG" && confirm "Write Mosoo target config?" "y"; then
 		write_target_config
 	fi
 	if "$RUN_LOGIN" && confirm "Run Mosoo auth login now?" "y"; then
