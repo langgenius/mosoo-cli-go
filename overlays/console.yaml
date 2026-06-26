@@ -123,6 +123,14 @@ commands:
     known_errors:
       - status: 401
         cause: "Missing, invalid, or revoked personal access token."
+  app-overview:
+    short: "App overview"
+    long: "App overview via the Mosoo Console GraphQL API (Apps surface). Requires a personal access token logged in to the /api host."
+    notes:
+      - "Uses POST /graphql on the console default hostname (/api)."
+    known_errors:
+      - status: 401
+        cause: "Missing, invalid, or revoked personal access token."
   app-skill-list:
     short: "List app skills"
     long: "List app skills via the Mosoo Console GraphQL API (Skills surface). Requires a personal access token logged in to the /api host."
@@ -158,6 +166,14 @@ commands:
   connect-mcp-bearer:
     short: "Connect a mcp bearer"
     long: "Connect a mcp bearer via the Mosoo Console GraphQL API (MCP surface). Requires a personal access token logged in to the /api host."
+    notes:
+      - "Uses POST /graphql on the console default hostname (/api)."
+    known_errors:
+      - status: 401
+        cause: "Missing, invalid, or revoked personal access token."
+  control-plane-overview:
+    short: "Control plane overview"
+    long: "Control plane overview via the Mosoo Console GraphQL API (Apps surface). Requires a personal access token logged in to the /api host."
     notes:
       - "Uses POST /graphql on the console default hostname (/api)."
     known_errors:
@@ -558,6 +574,14 @@ commands:
   skill-detail:
     short: "Skill detail"
     long: "Skill detail via the Mosoo Console GraphQL API (Skills surface). Requires a personal access token logged in to the /api host."
+    notes:
+      - "Uses POST /graphql on the console default hostname (/api)."
+    known_errors:
+      - status: 401
+        cause: "Missing, invalid, or revoked personal access token."
+  start-agent-run:
+    short: "Start agent run"
+    long: "Start agent run via the Mosoo Console GraphQL API (Sessions surface). Requires a personal access token logged in to the /api host."
     notes:
       - "Uses POST /graphql on the console default hostname (/api)."
     known_errors:

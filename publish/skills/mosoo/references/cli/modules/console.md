@@ -7,8 +7,8 @@
 - Repository: https://github.com/langgenius/mosoo.git
 - Pinned tag: `local-snapshot`
 - Schema: `docs/graphql/console.graphql`
-- Expose queries: `accessibleAgentList`, `agent`, `agentChannelBindingList`, `agentCostCard`, `agentEditorState`, `agentManifest`, `agentSessionDiagnostics`, `agentSessionList`, `agentSessionRetrieve`, `appCostCard`, `appEnvironmentList`, `appInfo`, `appList`, `appSkillList`, `availableAgentModels`, `environment`, `exportAgentPackage`, `fileList`, `listSessionResources`, `mcpOAuthFlowStatus`, `mcpRegistry`, `organizationBillingCostCard`, `session`, `sessionList`, `sessionMessages`, `sessionProcessEvents`, `skillDetail`, `threadAgentSessionList`, `threadAgentSessionRetrieve`, `threadSessionMessages`, `threadSessionProcessEvents`, `vendorCredentialList`, `viewer`
-- Expose mutations: `addSessionResource`, `archiveAgentSession`, `autoTitleSession`, `connectMcpBearer`, `createAgent`, `createAgentFork`, `createAgentSession`, `createApp`, `createAppMcpServer`, `createDiscordAgentChannelBinding`, `createEnvironmentFork`, `createLarkAgentChannelBinding`, `createSkillFork`, `createSlackAgentChannelBinding`, `createTelegramAgentChannelBinding`, `createVendorCredential`, `deleteAgent`, `deleteAgentChannelBinding`, `deleteAgentSession`, `deleteEnvironment`, `deleteMcpServer`, `deleteOwnedSkill`, `deleteVendorCredential`, `importAgentPackage`, `onboardingBootstrap`, `pollLarkAgentChannelRegistration`, `pollWeChatAgentChannelPairing`, `prewarmAgentSession`, `publishAgent`, `recreateSandbox`, `removeSessionResource`, `renameApp`, `renameSession`, `resetAgentState`, `restartDriver`, `revokeMcpCredential`, `setAppDefaultEnvironment`, `setDefaultVendorCredential`, `setEnvironmentVariableValue`, `setMcpServerEnabled`, `setSystemAgentModel`, `startLarkAgentChannelRegistration`, `startMcpOAuth`, `startWeChatAgentChannelPairing`, `testVendorCredential`, `unarchiveAgentSession`, `unpublishAgent`, `updateAgentConfig`, `updateProfile`, `updateVendorCredential`
+- Expose queries: `accessibleAgentList`, `agent`, `agentChannelBindingList`, `agentCostCard`, `agentEditorState`, `agentManifest`, `agentSessionDiagnostics`, `agentSessionList`, `agentSessionRetrieve`, `appCostCard`, `appEnvironmentList`, `appInfo`, `appList`, `appOverview`, `appSkillList`, `availableAgentModels`, `controlPlaneOverview`, `environment`, `exportAgentPackage`, `fileList`, `listSessionResources`, `mcpOAuthFlowStatus`, `mcpRegistry`, `organizationBillingCostCard`, `session`, `sessionList`, `sessionMessages`, `sessionProcessEvents`, `skillDetail`, `threadAgentSessionList`, `threadAgentSessionRetrieve`, `threadSessionMessages`, `threadSessionProcessEvents`, `vendorCredentialList`, `viewer`
+- Expose mutations: `addSessionResource`, `archiveAgentSession`, `autoTitleSession`, `connectMcpBearer`, `createAgent`, `createAgentFork`, `createAgentSession`, `createApp`, `createAppMcpServer`, `createDiscordAgentChannelBinding`, `createEnvironmentFork`, `createLarkAgentChannelBinding`, `createSkillFork`, `createSlackAgentChannelBinding`, `createTelegramAgentChannelBinding`, `createVendorCredential`, `deleteAgent`, `deleteAgentChannelBinding`, `deleteAgentSession`, `deleteEnvironment`, `deleteMcpServer`, `deleteOwnedSkill`, `deleteVendorCredential`, `importAgentPackage`, `onboardingBootstrap`, `pollLarkAgentChannelRegistration`, `pollWeChatAgentChannelPairing`, `prewarmAgentSession`, `publishAgent`, `recreateSandbox`, `removeSessionResource`, `renameApp`, `renameSession`, `resetAgentState`, `restartDriver`, `revokeMcpCredential`, `setAppDefaultEnvironment`, `setDefaultVendorCredential`, `setEnvironmentVariableValue`, `setMcpServerEnabled`, `setSystemAgentModel`, `startAgentRun`, `startLarkAgentChannelRegistration`, `startMcpOAuth`, `startWeChatAgentChannelPairing`, `testVendorCredential`, `unarchiveAgentSession`, `unpublishAgent`, `updateAgentConfig`, `updateProfile`, `updateVendorCredential`
 - Group policies: `13`
 - Selection policy: max depth `3`
 - Resolved SHA: `local-snapshot`
@@ -242,6 +242,36 @@ mosoo console agents create-agent \
 mosoo console apps app-list \
   --organization-id <value>
 ```
+
+### `mosoo console apps app-overview`
+
+- Summary: App overview
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-id` (variable, required): appId
+  - `--agent-limit` (variable): agentLimit
+  - `--credential-limit` (variable): credentialLimit
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console apps control-plane-overview`
+
+- Summary: Control plane overview
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--app-limit` (variable): appLimit
+  - `--agent-limit` (variable): agentLimit
+  - `--credential-limit` (variable): credentialLimit
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
 
 ### `mosoo console apps create-app`
 
@@ -710,7 +740,7 @@ mosoo console apps create-app \
 - Flags:
   - `--input-app-id` (variable, required): input.appId
   - `--input-scope-id` (variable): input.scopeId
-  - `--input-scope-kind` (variable, one of: agent_package|app_draft|library|session): input.scopeKind
+  - `--input-scope-kind` (variable, one of: account|agent_package|app_draft|library|session): input.scopeKind
   - `--input-session-id` (variable): input.sessionId
   - `--input-session-kind` (variable, one of: artifact|attachment): input.sessionKind
 - Notes:
@@ -1087,6 +1117,25 @@ mosoo console apps create-app \
   - `--app-id` (variable, required): appId
   - `--limit` (variable): limit
   - `--session-id` (variable, required): sessionId
+- Notes:
+  - Uses POST /graphql on the console default hostname (/api).
+- Known errors:
+  - HTTP 401: Missing, invalid, or revoked personal access token.
+
+### `mosoo console sessions start-agent-run`
+
+- Summary: Start agent run
+- HTTP: `POST /graphql`
+- Auth: required
+- Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Flags:
+  - `--input-agent-id` (variable): input.agentId
+  - `--input-app-id` (variable, required): input.appId
+  - `--input-client-request-id` (variable): input.clientRequestId
+  - `--input-prompt` (variable, required): input.prompt
+  - `--input-session-id` (variable): input.sessionId
+  - `--input-type` (variable, one of: api_channel|preview|ui): input.type
+  - `--input-wait-for-runtime-ready` (variable): input.waitForRuntimeReady
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
