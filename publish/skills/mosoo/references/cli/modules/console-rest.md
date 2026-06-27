@@ -134,7 +134,7 @@
 - Summary: Upload file content in a single request
 - HTTP: `PUT /files/{fileId}/content`
 - Auth: required
-- Body: required
+- Body: required; media type `application/octet-stream`
 - Flags:
   - `--file-id` (path, required, ulid): File ID.
 - Output: response media `application/json`
@@ -144,7 +144,7 @@
 - Summary: Upload one multipart part
 - HTTP: `PUT /files/{fileId}/parts/{partNumber}`
 - Auth: required
-- Body: required
+- Body: required; media type `application/octet-stream`
 - Flags:
   - `--file-id` (path, required, ulid): File ID.
   - `--part-number` (path, required): 1-based multipart part number.
@@ -179,7 +179,7 @@
 - Summary: Inspect a skill package from upload or GitHub URL
 - HTTP: `POST /skill/inspect`
 - Auth: required
-- Body: required
+- Body: required; media type `multipart/form-data`
 - Flags: none
 - Output: response media `application/json`
 
@@ -188,6 +188,6 @@
 - Summary: Create or update a skill package upload
 - HTTP: `POST /skill/package`
 - Auth: required
-- Body: required
+- Body: required; media type `multipart/form-data`
 - Flags: none
 - Output: response media `application/json`
