@@ -39,6 +39,25 @@ make build MOSOO_HOST_BASE=https://api.example.com
 
 ## Install
 
+Install the latest published Go module without cloning the repository:
+
+```sh
+go install github.com/langgenius/mosoo-cli-go/cmd/mosoo@latest
+```
+
+Install a specific release:
+
+```sh
+go install github.com/langgenius/mosoo-cli-go/cmd/mosoo@vX.Y.Z
+```
+
+`go install` downloads the module source and compiles it locally. It does not
+run `make build`, so release tags include the generated CLI manifest and Go
+command sources needed by `cmd/mosoo`. Make sure `go env GOBIN`, or
+`$(go env GOPATH)/bin` when `GOBIN` is empty, is on `PATH`.
+
+Install from a local checkout:
+
 ```sh
 make install
 ```
