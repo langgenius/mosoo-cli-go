@@ -55,3 +55,4 @@ Use `-o json` for machine-readable command output. Other supported formats are `
 ## Auth
 
 If command detail returns `auth.required=true`, run `mosoo auth status --hostname <host>` before execution. Use `http.default_hostname` when present unless the user provides `--hostname` or `$MOSOO_HOST`; if no matching host is logged in, stop and ask the user to authenticate.
+For browser-based OAuth login, run `mosoo auth login --auth-type oauth --hostname <host> --provider <provider>`. `auth_type: bearer` in `hosts.yml` is expected after login because API requests use the issued bearer token.

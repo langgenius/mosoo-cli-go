@@ -28,6 +28,7 @@ sources:
           - agentSessionList
           - agentSessionRetrieve
           - appCostCard
+          - appDeploymentStatus
           - appEnvironmentList
           - appInfo
           - appList
@@ -73,10 +74,12 @@ sources:
           - deleteAgent
           - deleteAgentChannelBinding
           - deleteAgentSession
+          - deleteAppDeployment
           - deleteEnvironment
           - deleteMcpServer
           - deleteOwnedSkill
           - deleteVendorCredential
+          - deployApp
           - importAgentPackage
           - onboardingBootstrap
           - pollLarkAgentChannelRegistration
@@ -168,10 +171,13 @@ sources:
             - onboardingBootstrap
           group: Onboarding
         - match:
+            - appDeploymentStatus
             - appList
             - appOverview
             - controlPlaneOverview
             - createApp
+            - deleteAppDeployment
+            - deployApp
             - renameApp
           group: Apps
         - match:

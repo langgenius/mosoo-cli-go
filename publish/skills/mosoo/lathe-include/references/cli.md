@@ -134,6 +134,13 @@ mosoo public-thread-api threads transcript --thread-id <thread-id>
 3. If the command detail has `auth.required=true`, run `mosoo auth status --hostname <host>` before execution. Use `http.default_hostname` when present unless the user provides `--hostname` or `$MOSOO_HOST`.
 4. Execute only after flags, body, auth, HTTP path, and output hints are clear from `commands show`.
 
+## Browser Login
+
+Use `mosoo auth login --auth-type oauth --hostname <host> --provider google`
+when the user needs browser-based Mosoo login for CLI access. The browser
+session may come from Google OAuth or Mosoo's email login, but the CLI stores the
+issued Mosoo API token as `auth_type: bearer` after authorization.
+
 ## Host Context
 
 Use `mosoo doctor --json` first when the target is not explicit. It reports the

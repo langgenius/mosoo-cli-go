@@ -109,6 +109,14 @@ commands:
     known_errors:
       - status: 401
         cause: "Missing, invalid, or revoked personal access token."
+  app-deployment-status:
+    short: "App deployment status"
+    long: "App deployment status via the Mosoo Console GraphQL API (Apps surface). Requires a personal access token logged in to the /api host."
+    notes:
+      - "Uses POST /graphql on the console default hostname (/api)."
+    known_errors:
+      - status: 401
+        cause: "Missing, invalid, or revoked personal access token."
   app-environment-list:
     short: "List app environments"
     long: "List app environments via the Mosoo Console GraphQL API (Environments surface). Requires a personal access token logged in to the /api host."
@@ -390,6 +398,14 @@ commands:
     known_errors:
       - status: 401
         cause: "Missing, invalid, or revoked personal access token."
+  delete-app-deployment:
+    short: "Delete an app deployment"
+    long: "Delete an app deployment via the Mosoo Console GraphQL API (Apps surface). Requires a personal access token logged in to the /api host."
+    notes:
+      - "Uses POST /graphql on the console default hostname (/api)."
+    known_errors:
+      - status: 401
+        cause: "Missing, invalid, or revoked personal access token."
   delete-environment:
     short: "Delete an environment"
     long: "Delete an environment via the Mosoo Console GraphQL API (Environments surface). Requires a personal access token logged in to the /api host."
@@ -417,6 +433,14 @@ commands:
   delete-vendor-credential:
     short: "Delete a vendor credential"
     long: "Delete a vendor credential via the Mosoo Console GraphQL API (Credentials surface). Requires a personal access token logged in to the /api host."
+    notes:
+      - "Uses POST /graphql on the console default hostname (/api)."
+    known_errors:
+      - status: 401
+        cause: "Missing, invalid, or revoked personal access token."
+  deploy-app:
+    short: "Deploy app"
+    long: "Deploy app via the Mosoo Console GraphQL API (Apps surface). Requires a personal access token logged in to the /api host."
     notes:
       - "Uses POST /graphql on the console default hostname (/api)."
     known_errors:
