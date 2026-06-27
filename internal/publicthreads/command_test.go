@@ -9,6 +9,7 @@ import (
 	"sync/atomic"
 	"testing"
 
+	latheruntime "github.com/lathe-cli/lathe/pkg/runtime"
 	"github.com/spf13/cobra"
 )
 
@@ -36,6 +37,55 @@ func TestInstallReplacesGeneratedCreateAndAddsHelpers(t *testing.T) {
 	if findChild(events, "wait") == nil {
 		t.Fatal("wait was not mounted")
 	}
+}
+
+func TestInstallAttachesCatalogEntriesForHelpers(t *testing.T) {
+	root := &cobra.Command{Use: "mosoo"}
+	surface := &cobra.Command{Use: "public-thread-api"}
+	threads := &cobra.Command{Use: "threads"}
+	events := &cobra.Command{Use: "events"}
+	threads.AddCommand(&cobra.Command{Use: "create", Short: "generated"})
+	surface.AddCommand(threads)
+	surface.AddCommand(events)
+	root.AddCommand(surface)
+
+	if err := Install(root); err != nil {
+		t.Fatalf("Install: %v", err)
+	}
+
+	create, ok := latheruntime.FindCatalogCommand(root, []string{"public-thread-api", "threads", "create"}, latheruntime.CatalogOptions{})
+	if !ok {
+		t.Fatal("catalog does not include public-thread-api threads create")
+	}
+	if create.HTTP.Method != "POST" || create.HTTP.PathTemplate != "/agents/{agentId}/threads" {
+		t.Fatalf("create HTTP = %+v", create.HTTP)
+	}
+	if create.Body == nil || create.Body.MediaType != "application/json" {
+		t.Fatalf("create body = %+v", create.Body)
+	}
+	for _, want := range []string{"agent-id", "file", "set", "wait", "final-output"} {
+		if !catalogHasFlag(create, want) {
+			t.Fatalf("create catalog missing --%s flag: %+v", want, create.Flags)
+		}
+	}
+
+	for _, path := range [][]string{
+		{"public-thread-api", "events", "wait"},
+		{"public-thread-api", "threads", "transcript"},
+	} {
+		if _, ok := latheruntime.FindCatalogCommand(root, path, latheruntime.CatalogOptions{}); !ok {
+			t.Fatalf("catalog does not include %v", path)
+		}
+	}
+}
+
+func catalogHasFlag(cmd latheruntime.CatalogCommand, name string) bool {
+	for _, flag := range cmd.Flags {
+		if flag.Flag == name {
+			return true
+		}
+	}
+	return false
 }
 
 func TestInstallErrorsWithoutSurface(t *testing.T) {

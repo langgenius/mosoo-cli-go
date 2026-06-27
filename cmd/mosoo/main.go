@@ -10,6 +10,7 @@ import (
 	"github.com/lathe-cli/lathe/pkg/runtime"
 
 	"github.com/langgenius/mosoo-cli-go/internal/agentmanifest"
+	"github.com/langgenius/mosoo-cli-go/internal/buildinfo"
 	"github.com/langgenius/mosoo-cli-go/internal/consolecommands"
 	"github.com/langgenius/mosoo-cli-go/internal/doctor"
 	"github.com/langgenius/mosoo-cli-go/internal/generated"
@@ -21,6 +22,8 @@ import (
 var manifestBytes []byte
 
 func main() {
+	buildinfo.Apply()
+
 	m, err := config.Load(manifestBytes)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "load cli.yaml: %v\n", err)

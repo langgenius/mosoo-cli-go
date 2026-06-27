@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	latheconfig "github.com/lathe-cli/lathe/pkg/config"
+	latheruntime "github.com/lathe-cli/lathe/pkg/runtime"
 	"github.com/spf13/cobra"
 )
 
@@ -106,6 +107,29 @@ func TestInstallReplacesExistingGeneratedUpdateConfig(t *testing.T) {
 	}
 	if got.Short != "Update an agent config" {
 		t.Fatalf("update-config short = %q", got.Short)
+	}
+}
+
+func TestInstallAttachesHiddenCatalogEntry(t *testing.T) {
+	root := &cobra.Command{Use: "mosoo"}
+	console := &cobra.Command{Use: "console"}
+	agents := &cobra.Command{Use: "agents"}
+	agents.AddCommand(&cobra.Command{Use: "update-config", Short: "generated"})
+	console.AddCommand(agents)
+	root.AddCommand(console)
+
+	if err := Install(root); err != nil {
+		t.Fatal(err)
+	}
+	entry, ok := latheruntime.FindCatalogCommand(root, []string{"console", "agents", "update-config"}, latheruntime.CatalogOptions{IncludeHidden: true})
+	if !ok {
+		t.Fatal("catalog does not include hidden console agents update-config")
+	}
+	if !entry.Hidden {
+		t.Fatal("update-config catalog entry should be hidden")
+	}
+	if entry.HTTP.PathTemplate != "/graphql" {
+		t.Fatalf("HTTP = %+v", entry.HTTP)
 	}
 }
 

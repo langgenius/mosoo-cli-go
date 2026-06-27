@@ -114,7 +114,52 @@ func newUpdateConfigCommand() *cobra.Command {
 	} {
 		_ = cmd.MarkFlagRequired(name)
 	}
+	latheruntime.AttachCatalogCommand(cmd, "console", updateConfigCatalogSpec(cmd))
 	return cmd
+}
+
+func updateConfigCatalogSpec(cmd *cobra.Command) latheruntime.CommandSpec {
+	return latheruntime.CommandSpec{
+		Group:           "Agents",
+		Use:             "update-config",
+		Aliases:         append([]string(nil), cmd.Aliases...),
+		Short:           cmd.Short,
+		Long:            cmd.Long,
+		Example:         cmd.Example,
+		OperationID:     "console_updateAgentConfig",
+		Hidden:          true,
+		Method:          http.MethodPost,
+		PathTpl:         "/graphql",
+		DefaultHostname: "http://127.0.0.1:8787/api",
+		Params: []latheruntime.ParamSpec{
+			{Name: "input.agentId", Flag: "input-agent-id", In: latheruntime.InVariable, GoType: "string", Help: "input.agentId (variable, required)", Required: true},
+			{Name: "input.description", Flag: "input-description", In: latheruntime.InVariable, GoType: "string", Help: "input.description (variable)", Required: false},
+			{Name: "input.environment.environmentId", Flag: "input-environment-environment-id", In: latheruntime.InVariable, GoType: "string", Help: "input.environment.environmentId (variable)", Required: false},
+			{Name: "input.kind", Flag: "input-kind", In: latheruntime.InVariable, GoType: "string", Help: "input.kind (variable, required, one of: pet|cattle)", Required: true, Enum: []string{"pet", "cattle"}},
+			{Name: "input.mcpServerIds", Flag: "input-mcp-server-ids", In: latheruntime.InVariable, GoType: "[]string", Help: "input.mcpServerIds (variable, required)", Required: true},
+			{Name: "input.model", Flag: "input-model", In: latheruntime.InVariable, GoType: "string", Help: "input.model (variable, required)", Required: true},
+			{Name: "input.name", Flag: "input-name", In: latheruntime.InVariable, GoType: "string", Help: "input.name (variable, required)", Required: true},
+			{Name: "input.prompt", Flag: "input-prompt", In: latheruntime.InVariable, GoType: "string", Help: "input.prompt (variable, required)", Required: true},
+			{Name: "input.provider", Flag: "input-provider", In: latheruntime.InVariable, GoType: "string", Help: "input.provider (variable, required)", Required: true},
+			{Name: "input.providerOptions", Flag: "input-provider-options", In: latheruntime.InVariable, GoType: "string", Help: "input.providerOptions JSON object (variable, required)", Required: true},
+			{Name: "input.runtimeId", Flag: "input-runtime-id", In: latheruntime.InVariable, GoType: "string", Help: "input.runtimeId (variable, required)", Required: true},
+			{Name: "input.skillIds", Flag: "input-skill-ids", In: latheruntime.InVariable, GoType: "[]string", Help: "input.skillIds (variable, required)", Required: true},
+			{Name: "input.appId", Flag: "input-app-id", In: latheruntime.InVariable, GoType: "string", Help: "input.appId (variable, required)", Required: true},
+		},
+		RequestBody: &latheruntime.RequestBody{
+			Required:  true,
+			MediaType: "application/json",
+		},
+		Output: latheruntime.OutputHints{ResponseMediaType: "application/json"},
+		Notes: []string{
+			"Raw API command. The product workflow command is `mosoo agent manifest apply`.",
+			"Uses POST /graphql on the console default hostname (/api).",
+			"Agent config updates are full-manifest updates: pull agent-manifest first, preserve unchanged environment/runtime/provider/tool fields, and submit the complete updated config.",
+		},
+		KnownErrors: []latheruntime.KnownError{
+			{Status: 401, Cause: "Missing, invalid, or revoked personal access token."},
+		},
+	}
 }
 
 func (o updateConfigOptions) input(cmd *cobra.Command) (map[string]any, error) {

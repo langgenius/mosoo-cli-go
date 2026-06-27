@@ -5,8 +5,14 @@ import (
 	"fmt"
 	"time"
 
+	threadspecs "github.com/langgenius/mosoo-cli-go/internal/generated/threads"
 	latheruntime "github.com/lathe-cli/lathe/pkg/runtime"
 	"github.com/spf13/cobra"
+)
+
+const (
+	catalogBodyLocation  = "body"
+	catalogLocalLocation = "local"
 )
 
 // Install mounts the hand-maintained Public Thread API usability helpers onto
@@ -130,6 +136,7 @@ func newCreateCommand() *cobra.Command {
 	flags.BoolVar(&wait, "wait", false, "Block until the initial run reaches a terminal state")
 	addWaitFlags(cmd, &wf, true)
 	_ = cmd.MarkFlagRequired("agent-id")
+	latheruntime.AttachCatalogCommand(cmd, "public-thread-api", createCatalogSpec(cmd))
 	return cmd
 }
 
@@ -179,6 +186,7 @@ func newWaitCommand() *cobra.Command {
 	cmd.Flags().StringVar(&threadID, "thread-id", "", "Thread ID returned by create thread. v1 IDs are bare ULIDs. (required, ulid)")
 	addWaitFlags(cmd, &wf, true)
 	_ = cmd.MarkFlagRequired("thread-id")
+	latheruntime.AttachCatalogCommand(cmd, "public-thread-api", waitCatalogSpec(cmd))
 	return cmd
 }
 
@@ -230,7 +238,82 @@ func newTranscriptCommand() *cobra.Command {
 	cmd.Flags().IntVar(&limit, "limit", 100, "Maximum number of latest thread events to fetch")
 	cmd.Flags().BoolVar(&includeThinking, "include-thinking", false, "Include agent thinking events in the transcript")
 	_ = cmd.MarkFlagRequired("thread-id")
+	latheruntime.AttachCatalogCommand(cmd, "public-thread-api", transcriptCatalogSpec(cmd))
 	return cmd
+}
+
+func createCatalogSpec(cmd *cobra.Command) latheruntime.CommandSpec {
+	spec := mustGeneratedSpec("Threads", "create")
+	spec.Long = cmd.Long
+	spec.Example = cmd.Example
+	spec.Params = append(spec.Params,
+		bodyParam("body.file", "file", "string", "path to JSON body file, or '-' for stdin"),
+		bodyParam("body.set", "set", "[]string", "set body field with type inference, repeatable and nested via dots"),
+		bodyParam("body.setStr", "set-str", "[]string", "set body field as string, repeatable and nested via dots"),
+		localParam("wait", "wait", "bool", "Block until the initial run reaches a terminal state", "false"),
+		localParam("timeout", "timeout", "duration", "Maximum time to wait for the run to finish (0 = wait indefinitely)", DefaultWaitTimeout.String()),
+		localParam("pollInterval", "poll-interval", "duration", "How often to poll thread state while waiting", DefaultPollInterval.String()),
+		localParam("finalOutput", "final-output", "bool", "On success, print only the completed run's final output text (implies --wait)", "false"),
+	)
+	return spec
+}
+
+func waitCatalogSpec(cmd *cobra.Command) latheruntime.CommandSpec {
+	spec := mustGeneratedSpec("Threads", "retrieve")
+	spec.Group = "Events"
+	spec.Use = "wait"
+	spec.Short = cmd.Short
+	spec.Long = cmd.Long
+	spec.Example = cmd.Example
+	spec.OperationID = "ThreadEvents_Wait"
+	spec.Params = append(spec.Params,
+		localParam("timeout", "timeout", "duration", "Maximum time to wait for the run to finish (0 = wait indefinitely)", DefaultWaitTimeout.String()),
+		localParam("pollInterval", "poll-interval", "duration", "How often to poll thread state while waiting", DefaultPollInterval.String()),
+		localParam("finalOutput", "final-output", "bool", "On success, print only the completed run's final output text", "false"),
+	)
+	return spec
+}
+
+func transcriptCatalogSpec(cmd *cobra.Command) latheruntime.CommandSpec {
+	spec := mustGeneratedSpec("Events", "list-events")
+	spec.Use = "transcript"
+	spec.Short = cmd.Short
+	spec.Long = cmd.Long
+	spec.Example = cmd.Example
+	spec.OperationID = "ThreadEvents_Transcript"
+	spec.Params = append(spec.Params,
+		localParam("runId", "run-id", "string", "Only include events for this run ID", ""),
+		localParam("includeThinking", "include-thinking", "bool", "Include agent thinking events in the transcript", "false"),
+	)
+	return spec
+}
+
+func mustGeneratedSpec(group, use string) latheruntime.CommandSpec {
+	for _, spec := range threadspecs.Specs {
+		if spec.Group == group && spec.Use == use {
+			return cloneSpec(spec)
+		}
+	}
+	panic(fmt.Sprintf("missing generated public-thread-api spec %s/%s", group, use))
+}
+
+func cloneSpec(spec latheruntime.CommandSpec) latheruntime.CommandSpec {
+	spec.Aliases = append([]string(nil), spec.Aliases...)
+	spec.Shortcuts = append([]latheruntime.CommandShortcut(nil), spec.Shortcuts...)
+	spec.Params = append([]latheruntime.ParamSpec(nil), spec.Params...)
+	spec.Notes = append([]string(nil), spec.Notes...)
+	spec.Prerequisites = append([]string(nil), spec.Prerequisites...)
+	spec.KnownErrors = append([]latheruntime.KnownError(nil), spec.KnownErrors...)
+	spec.Output.DefaultColumns = append([]string(nil), spec.Output.DefaultColumns...)
+	return spec
+}
+
+func bodyParam(name, flag, goType, help string) latheruntime.ParamSpec {
+	return latheruntime.ParamSpec{Name: name, Flag: flag, In: catalogBodyLocation, GoType: goType, Help: help}
+}
+
+func localParam(name, flag, goType, help, defaultValue string) latheruntime.ParamSpec {
+	return latheruntime.ParamSpec{Name: name, Flag: flag, In: catalogLocalLocation, GoType: goType, Help: help, Default: defaultValue}
 }
 
 // finishWait renders the outcome of a wait and returns a non-nil error when the

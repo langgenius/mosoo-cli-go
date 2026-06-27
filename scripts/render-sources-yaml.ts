@@ -67,7 +67,7 @@ const sourcesYaml = `sources:
       groups:
 ${yamlGroupRules("        ")}
       selection:
-        max_depth: 3
+        max_depth: 5
   consolerest:
     display_name: console-rest
     default_hostname: ${consoleDefaultHostname}
