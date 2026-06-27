@@ -39,7 +39,13 @@
 - Known errors:
   - HTTP 401: Invalid personal access token.
   - HTTP 409: Idempotency key reused while the original request is still processing.
-- Example: `mosoo public-thread-api events send --thread-id <thread-id> --file events.json`
+- Examples:
+  - Send a user message event to an existing thread.
+    Command: `mosoo public-thread-api events send --thread-id <thread-id> --file events.json -o json`
+    Body shape: `{"events":[{"clientRequestId":"cli-send-001","text":"Continue the task with this follow-up.","type":"user_message"}]}`
+    Output list path: `events`
+    Follow-up commands:
+      - `mosoo public-thread-api events list-events --thread-id <thread-id> -o json`
 
 ### `mosoo public-thread-api events stream`
 
@@ -112,7 +118,14 @@
   - `--idempotency-key` (header): Optional key for retry-safe create-thread and send-events calls. Reusing the same key with the same request returns the original response. Reusing the key while the original request is still processing returns 409.
 - Known errors:
   - HTTP 404: Agent not found or not accessible to this token.
-- Example: `mosoo public-thread-api threads create --agent-id <agent-id> --file body.json`
+- Examples:
+  - Create a Thread with an initial user message and capture the Thread ID.
+    Command: `mosoo public-thread-api threads create --agent-id <agent-id> --file thread-create.json -o json`
+    Body shape: `{"client_external_ref":"demo-thread-001","input":{"content":[{"text":"Say hello from the API.","type":"text"}],"type":"user.message"}}`
+    Output ID path: `thread.id`
+    Follow-up commands:
+      - `mosoo public-thread-api threads retrieve --thread-id <thread-id> -o json`
+      - `mosoo public-thread-api events list-events --thread-id <thread-id> -o json`
 
 ### `mosoo public-thread-api threads delete`
 

@@ -14,6 +14,22 @@ commands:
     long: "Create a new thread against an agent API endpoint."
     example: |
       mosoo public-thread-api threads create --agent-id <agent-id> --file body.json
+    examples:
+      - summary: "Create a Thread with an initial user message and capture the Thread ID."
+        command: "mosoo public-thread-api threads create --agent-id <agent-id> --file thread-create.json -o json"
+        body_shape:
+          client_external_ref: demo-thread-001
+          input:
+            type: user.message
+            content:
+              -
+                type: text
+                text: "Say hello from the API."
+        output_hints:
+          id_path: thread.id
+        follow_up_commands:
+          - "mosoo public-thread-api threads retrieve --thread-id <thread-id> -o json"
+          - "mosoo public-thread-api events list-events --thread-id <thread-id> -o json"
     known_errors:
       - status: 404
         cause: "Agent not found or not accessible to this token."
@@ -57,6 +73,19 @@ commands:
     long: "Send user messages, permission decisions, or interrupts to a thread session."
     example: |
       mosoo public-thread-api events send --thread-id <thread-id> --file events.json
+    examples:
+      - summary: "Send a user message event to an existing thread."
+        command: "mosoo public-thread-api events send --thread-id <thread-id> --file events.json -o json"
+        body_shape:
+          events:
+            -
+              type: user_message
+              text: "Continue the task with this follow-up."
+              clientRequestId: cli-send-001
+        output_hints:
+          list_path: events
+        follow_up_commands:
+          - "mosoo public-thread-api events list-events --thread-id <thread-id> -o json"
     known_errors:
       - status: 401
         cause: "Invalid personal access token."

@@ -3,7 +3,7 @@ module github.com/langgenius/mosoo-cli-go
 go 1.25.7
 
 require (
-	github.com/lathe-cli/lathe v0.4.2
+	github.com/lathe-cli/lathe v0.4.3
 	github.com/spf13/cobra v1.10.2
 	gopkg.in/yaml.v3 v3.0.1
 )

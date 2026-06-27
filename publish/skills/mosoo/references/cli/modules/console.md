@@ -27,7 +27,14 @@
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
-- Example: `mosoo console agents list --app-id <app-id> -o json`
+- Examples:
+  - List Agents available to the signed-in user for one App and capture an Agent ID.
+    Command: `mosoo console agents accessible-agent-list --app-id <app-id> -o json`
+    Body shape: `{"appId":"\u003capp-id\u003e"}`
+    Output ID path: `data.accessibleAgentList[0].id`
+    Output list path: `data.accessibleAgentList`
+    Follow-up commands:
+      - `mosoo console agents agent --app-id <app-id> --agent-id <agent-id> -o json`
 
 ### `mosoo console agents agent`
 
@@ -77,25 +84,14 @@
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
-- Example:
-
-```
-cat > agent-create.json <<'JSON'
-{
-  "input": {
-    "appId": "<app-id>",
-    "name": "Research Agent",
-    "kind": "<pet-or-cattle>",
-    "runtimeId": "<runtime-id>",
-    "provider": "<provider>",
-    "model": "<model>",
-    "prompt": "You research concise answers with citations.",
-    "skillIds": []
-  }
-}
-JSON
-mosoo console agents create --file agent-create.json -o json
-```
+- Examples:
+  - Create an Agent from a JSON body file
+    Command: `mosoo console agents create-agent --file agent-create.json -o json`
+    Body shape: `{"input":{"appId":"\u003capp-id\u003e","kind":"pet","model":"\u003cmodel\u003e","name":"Research Agent","prompt":"You research concise answers with citations.","provider":"\u003cprovider\u003e","runtimeId":"\u003cruntime-id\u003e","skillIds":[]}}`
+    Output ID path: `data.createAgent.id`
+    Follow-up commands:
+      - `mosoo console agents agent --app-id <app-id> --agent-id <id> -o json`
+      - `mosoo console agents publish-agent --input-app-id <app-id> --input-agent-id <id> -o json`
 
 ### `mosoo console agents create-agent-fork`
 
@@ -299,12 +295,13 @@ mosoo console agents create --file agent-create.json -o json
   - Uses POST /graphql on the console default hostname (/api).
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
-- Example:
-
-```
-mosoo console apps create-app \
-  --app-id <value>
-```
+- Examples:
+  - Create a minimal App and capture its id for follow-up commands.
+    Command: `mosoo console apps create-app --input-organization-id <organization-id> --input-name "CLI Example App" -o json`
+    Body shape: `{"input":{"name":"CLI Example App","organizationId":"\u003corganization-id\u003e"}}`
+    Output ID path: `data.createApp.id`
+    Follow-up commands:
+      - `mosoo console apps app-overview --app-id <app-id> -o json`
 
 ### `mosoo console apps rename-app`
 
@@ -577,20 +574,17 @@ mosoo console apps create-app \
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
   - For preset providers such as openai or anthropic, omit input.models unless Mosoo asks for explicit model configuration.
-  - Plaintext terminal input is supported through the generated --input-api-key flag. This can be visible in shell history.
-  - Current Lathe required variable flags must be present; --set and --set-str can supplement body fields but do not replace required flags.
+  - Use --input-api-key-env, --input-api-key-file, or --input-api-key-stdin so provider keys do not appear in shell history.
+  - Current Lathe required variable flags must be present; safe input modes satisfy the required input.apiKey variable.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
-- Example:
-
-```
-mosoo console credentials create \
-  --input-app-id <app-id> \
-  --input-vendor-id openai \
-  --input-name "OpenAI" \
-  --input-api-key 'sk-...' \
-  -o json
-```
+- Examples:
+  - Create an OpenAI provider credential from an environment variable
+    Command: `mosoo console credentials create-vendor-credential \ --input-app-id <app-id> \ --input-vendor-id openai \ --input-name "OpenAI" \ --input-api-key-env OPENAI_API_KEY \ -o json`
+    Body shape: `{"input":{"apiKey":"$OPENAI_API_KEY","appId":"\u003capp-id\u003e","name":"OpenAI","vendorId":"openai"}}`
+    Output ID path: `data.createVendorCredential.id`
+    Follow-up commands:
+      - `mosoo console credentials vendor-credential-list --app-id <app-id> -o json`
 
 ### `mosoo console credentials delete-vendor-credential`
 
@@ -634,19 +628,16 @@ mosoo console credentials create \
   - `--input-vendor-id` (variable, required): input.vendorId
 - Notes:
   - Uses POST /graphql on the console default hostname (/api).
-  - Plaintext terminal input is supported through the generated --input-api-key flag. This can be visible in shell history.
+  - Prefer --input-api-key-env, --input-api-key-file, or --input-api-key-stdin so provider secrets do not appear in shell history.
   - Current Lathe required variable flags must be present; --set and --set-str can supplement body fields but do not replace required flags.
 - Known errors:
   - HTTP 401: Missing, invalid, or revoked personal access token.
-- Example:
-
-```
-mosoo console credentials test \
-  --input-app-id <app-id> \
-  --input-vendor-id openai \
-  --input-api-key 'sk-...' \
-  -o json
-```
+- Examples:
+  - Smoke test an OpenAI provider key from the environment before saving it.
+    Command: `mosoo console credentials test-vendor-credential \ --input-app-id <app-id> \ --input-vendor-id openai \ --input-model-id gpt-4o-mini \ --input-api-key-env OPENAI_API_KEY \ -o json`
+    Body shape: `{"input":{"apiKey":"\u003cread from OPENAI_API_KEY\u003e","appId":"\u003capp-id\u003e","modelId":"gpt-4o-mini","vendorId":"openai"}}`
+    Follow-up commands:
+      - `mosoo console credentials create-vendor-credential --input-app-id <app-id> --input-vendor-id openai --input-name "OpenAI" --input-api-key-env OPENAI_API_KEY -o json`
 
 ### `mosoo console credentials update-vendor-credential`
 
