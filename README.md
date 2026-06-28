@@ -129,6 +129,11 @@ Help text, examples, and error hints for generated commands come from `overlays/
 catalog is the complete control-plane surface; overlays are usability polish, and
 the Mosoo Skill reference explains high-frequency workflows.
 
+High-frequency root commands such as `mosoo ls`, `mosoo run`, `mosoo add-key`,
+and `mosoo create-agent` are Lathe overlay `shortcuts` for generated operations.
+They execute the same generated command specs as their canonical paths and are
+reported in the generated command catalog.
+
 ## Hostnames and auth
 
 Three API surfaces share one deployment but use different URL bases:
@@ -207,14 +212,14 @@ but it still needs viewer-level authentication; it is not a first-login mechanis
 
 ```sh
 mosoo console user viewer
-mosoo console apps overview --app-limit 20 --agent-limit 20 --credential-limit 20 -o json
-mosoo console credentials create --input-app-id <app-id> --input-vendor-id openai --input-name OpenAI --input-api-key 'sk-...' -o json
-mosoo console agents create --file agent-create.json -o json
+mosoo ls --app-limit 20 --agent-limit 20 --credential-limit 20 -o json
+mosoo add-key --input-app-id <app-id> --input-vendor-id openai --input-name OpenAI --input-api-key-env OPENAI_API_KEY -o json
+mosoo create-agent --file agent-create.json -o json
 mosoo console agents publish --input-app-id <app-id> --input-agent-id <agent-id> -o json
-mosoo console sessions run --input-app-id <app-id> --input-agent-id <agent-id> --input-prompt "Summarize this repository" -o json
+mosoo run --input-app-id <app-id> --input-agent-id <agent-id> --input-prompt "Summarize this repository" -o json
 mosoo console sessions events --app-id <app-id> --session-id <session-id> --limit 100 -o json
 mosoo search "run agent" --json
-mosoo commands show console sessions start-agent-run --json
+mosoo commands show run --json
 ```
 
 Use `commands show` before executing an unfamiliar generated command so flags,

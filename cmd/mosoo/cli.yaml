@@ -4,6 +4,10 @@ cli:
   command_path: namespaced
 
 auth:
+  login:
+    type: oauth_device
+    start_path: /auth/cli/start
+    token_path: /auth/cli/token
   validate:
     method: GET
     path: /access-tokens

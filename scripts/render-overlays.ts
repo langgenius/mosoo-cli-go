@@ -10,6 +10,7 @@ const overlayDir = resolve(dirname(fileURLToPath(import.meta.url)), "..", "overl
 type OverlayCommand = {
 	use?: string;
 	aliases?: string[];
+	shortcuts?: OverlayShortcut[];
 	short?: string;
 	long?: string;
 	example?: string;
@@ -19,6 +20,11 @@ type OverlayCommand = {
 	notes?: string[];
 	prerequisites?: string[];
 	known_errors?: { status: number; cause: string }[];
+};
+
+type OverlayShortcut = {
+	use: string;
+	params?: Record<string, string>;
 };
 
 type OverlayExample = {
@@ -115,6 +121,7 @@ const consoleCommandOverrides: Record<string, OverlayCommand> = {
 	},
 	controlPlaneOverview: {
 		aliases: ["overview"],
+		shortcuts: [{ use: "ls" }],
 		short: "Show control-plane overview",
 		long: "Show the current user's control-plane overview for generated CLI list flows. This is the main ls/overview path.",
 		example: "mosoo console apps overview --app-limit 20 --agent-limit 20 --credential-limit 20 -o json",
@@ -145,6 +152,7 @@ const consoleCommandOverrides: Record<string, OverlayCommand> = {
 	},
 	createAgent: {
 		aliases: ["create"],
+		shortcuts: [{ use: "create-agent" }],
 		short: "Create an Agent",
 		long: "Create an Agent draft from a structured input. Publish it with publish-agent after provider credentials are configured.",
 		example: [
@@ -192,6 +200,7 @@ const consoleCommandOverrides: Record<string, OverlayCommand> = {
 	},
 	createVendorCredential: {
 		aliases: ["create"],
+		shortcuts: [{ use: "add-key" }],
 		short: "Add a provider key",
 		long: "Create a provider credential for an App while keeping API keys out of shell history.",
 		example: [
@@ -243,6 +252,7 @@ const consoleCommandOverrides: Record<string, OverlayCommand> = {
 	},
 	startAgentRun: {
 		aliases: ["run"],
+		shortcuts: [{ use: "run" }],
 		short: "Start an Agent run",
 		long: "Create or continue a Thread, queue one prompt Run, and return event-surface metadata for polling.",
 		example: [
@@ -655,6 +665,15 @@ function renderOverlay(commands: Record<string, OverlayCommand>): string {
 		}
 		if (command.aliases?.length) {
 			lines.push(`    aliases: [${command.aliases.map(yamlQuote).join(", ")}]`);
+		}
+		if (command.shortcuts?.length) {
+			lines.push("    shortcuts:");
+			for (const shortcut of command.shortcuts) {
+				lines.push(`      - use: ${yamlQuote(shortcut.use)}`);
+				if (shortcut.params && Object.keys(shortcut.params).length > 0) {
+					renderYamlValue(lines, "params", shortcut.params, 8);
+				}
+			}
 		}
 		if (command.short) {
 			lines.push(`    short: ${yamlQuote(command.short)}`);

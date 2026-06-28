@@ -196,6 +196,8 @@ commands:
         cause: "Missing, invalid, or revoked personal access token."
   control-plane-overview:
     aliases: [overview]
+    shortcuts:
+      - use: ls
     short: "Show control-plane overview"
     long: "Show the current user's control-plane overview for generated CLI list flows. This is the main ls/overview path."
     example: |
@@ -208,6 +210,8 @@ commands:
         cause: "Missing, invalid, or revoked personal access token."
   create-agent:
     aliases: [create]
+    shortcuts:
+      - use: create-agent
     short: "Create an Agent"
     long: "Create an Agent draft from a structured input. Publish it with publish-agent after provider credentials are configured."
     example: |
@@ -344,6 +348,8 @@ commands:
         cause: "Missing, invalid, or revoked personal access token."
   create-vendor-credential:
     aliases: [create]
+    shortcuts:
+      - use: add-key
     short: "Add a provider key"
     long: "Create a provider credential for an App while keeping API keys out of shell history."
     example: |
@@ -693,6 +699,8 @@ commands:
         cause: "Missing, invalid, or revoked personal access token."
   start-agent-run:
     aliases: [run]
+    shortcuts:
+      - use: run
     short: "Start an Agent run"
     long: "Create or continue a Thread, queue one prompt Run, and return event-surface metadata for polling."
     example: |

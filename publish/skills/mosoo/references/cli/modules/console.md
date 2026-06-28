@@ -70,6 +70,8 @@
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Shortcuts:
+  - `mosoo create-agent`
 - Flags:
   - `--input-description` (variable): input.description
   - `--input-kind` (variable, required, one of: pet|cattle): input.kind
@@ -284,6 +286,8 @@
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Shortcuts:
+  - `mosoo ls`
 - Flags:
   - `--app-limit` (variable): appLimit
   - `--agent-limit` (variable): agentLimit
@@ -605,6 +609,8 @@
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Shortcuts:
+  - `mosoo add-key`
 - Flags:
   - `--input-api-base` (variable): input.apiBase
   - `--input-api-key` (variable, required): input.apiKey
@@ -1198,6 +1204,8 @@
 - HTTP: `POST /graphql`
 - Auth: required
 - Body: required; templated body, set inputs under `variables` with --set/--set-str/--file
+- Shortcuts:
+  - `mosoo run`
 - Flags:
   - `--input-agent-id` (variable): input.agentId
   - `--input-app-id` (variable, required): input.appId

@@ -20,6 +20,11 @@ Use generated CLI commands for Mosoo resource operations, and use
 Do not invent a wrapper command when the generated catalog already exposes the
 operation.
 
+High-frequency root commands such as `mosoo ls`, `mosoo run`, `mosoo add-key`,
+and `mosoo create-agent` are Lathe-generated `shortcuts` for canonical generated
+operations. Treat them as generated command entries, and confirm their exact
+flags and body shape with `mosoo commands show <shortcut> --json`.
+
 For a new App, Agent creation, publishing, credential setup, or Console/API
 inspection, search the generated catalog first. For app environment files only,
 derive `MOSOO_API_BASE`, `MOSOO_AGENT_ID`, and `MOSOO_API_TOKEN` from the
@@ -83,7 +88,8 @@ moving to the next step:
 ```sh
 mosoo console apps app-list --organization-id <organization-id> -o json
 mosoo console apps create-app --input-organization-id <organization-id> --input-name <app-name> -o json
-mosoo console agents create-agent --file create-agent.json -o json
+mosoo add-key --input-app-id <app-id> --input-vendor-id openai --input-name OpenAI --input-api-key-env OPENAI_API_KEY -o json
+mosoo create-agent --file create-agent.json -o json
 mosoo console agents publish-agent --input-app-id <app-id> --input-agent-id <agent-id> -o json
 ```
 

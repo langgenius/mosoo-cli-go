@@ -55,6 +55,10 @@ var Specs = []runtime.CommandSpec{
 		Short:   "Send events to a thread",
 		Long:    "Send user messages, permission decisions, or interrupts to a thread session.",
 		Example: "mosoo public-thread-api events send --thread-id <thread-id> --file events.json\n",
+		Examples: []runtime.CommandExample{
+			{Summary: "Send a user message event to an existing thread.", Command: "mosoo public-thread-api events send --thread-id <thread-id> --file events.json -o json", BodyShape: []byte("{\"events\":[{\"clientRequestId\":\"cli-send-001\",\"text\":\"Continue the task with this follow-up.\",\"type\":\"user_message\"}]}"), OutputHints: &runtime.ExampleOutputHints{ListPath: "events"}, FollowUpCommands: []string{"mosoo public-thread-api events list-events --thread-id <thread-id> -o json"},
+			},
+		},
 		KnownErrors: []runtime.KnownError{
 			{Status: 401, Cause: "Invalid personal access token."},
 			{Status: 409, Cause: "Idempotency key reused while the original request is still processing."},
@@ -173,6 +177,10 @@ var Specs = []runtime.CommandSpec{
 		Short:   "Create a thread for an agent",
 		Long:    "Create a new thread against an agent API endpoint.",
 		Example: "mosoo public-thread-api threads create --agent-id <agent-id> --file body.json\n",
+		Examples: []runtime.CommandExample{
+			{Summary: "Create a Thread with an initial user message and capture the Thread ID.", Command: "mosoo public-thread-api threads create --agent-id <agent-id> --file thread-create.json -o json", BodyShape: []byte("{\"client_external_ref\":\"demo-thread-001\",\"input\":{\"content\":[{\"text\":\"Say hello from the API.\",\"type\":\"text\"}],\"type\":\"user.message\"}}"), OutputHints: &runtime.ExampleOutputHints{IDPath: "thread.id"}, FollowUpCommands: []string{"mosoo public-thread-api threads retrieve --thread-id <thread-id> -o json", "mosoo public-thread-api events list-events --thread-id <thread-id> -o json"},
+			},
+		},
 		KnownErrors: []runtime.KnownError{
 			{Status: 404, Cause: "Agent not found or not accessible to this token."},
 		},
