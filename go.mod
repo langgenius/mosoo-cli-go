@@ -4,6 +4,8 @@ go 1.25.7
 
 require (
 	github.com/lathe-cli/lathe v0.4.4-0.20260627231917-297788512b95
+	github.com/samzong/kitup/go v0.1.1
+	github.com/samzong/kitup/go-cobra v0.1.1
 	github.com/spf13/cobra v1.10.2
 	gopkg.in/yaml.v3 v3.0.1
 )

@@ -20,6 +20,10 @@ github.com/lathe-cli/lathe v0.4.4-0.20260627231917-297788512b95/go.mod h1:R7LnEO
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
+github.com/samzong/kitup/go v0.1.1 h1:U4KAM11sP7Wu0kWCepVTl9EvZl1C+6Pad0TSAD/aPfg=
+github.com/samzong/kitup/go v0.1.1/go.mod h1:HKrHTi2NJhUEYei3+0ngMKSS4Abpp2JE2L34Rq0eiDY=
+github.com/samzong/kitup/go-cobra v0.1.1 h1:uuZAouJFBNJOD91Izmm2Jq55OKz1m1dDydnSd+rFhJY=
+github.com/samzong/kitup/go-cobra v0.1.1/go.mod h1:Kwpg8hNw0feW8fuiE9yPy4Q0mHdgpH54+1wtnZDO/po=
 github.com/spf13/cobra v1.10.2 h1:DMTTonx5m65Ic0GOoRY2c16WCbHxOOw6xxezuLaBpcU=
 github.com/spf13/cobra v1.10.2/go.mod h1:7C1pvHqHw5A4vrJfjNwvOdzYu0Gml16OCs2GRiTUUS4=
 github.com/spf13/pflag v1.0.9 h1:9exaQaMOCwffKiiiYk6/BndUBv+iRViNW+4lEMi0PvY=

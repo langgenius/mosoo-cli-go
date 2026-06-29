@@ -8,6 +8,8 @@ import (
 	"github.com/lathe-cli/lathe/pkg/config"
 	"github.com/lathe-cli/lathe/pkg/lathe"
 	"github.com/lathe-cli/lathe/pkg/runtime"
+	kitup "github.com/samzong/kitup/go"
+	kitupcobra "github.com/samzong/kitup/go-cobra"
 
 	"github.com/langgenius/mosoo-cli-go/internal/agentmanifest"
 	"github.com/langgenius/mosoo-cli-go/internal/buildinfo"
@@ -16,6 +18,7 @@ import (
 	"github.com/langgenius/mosoo-cli-go/internal/generated"
 	"github.com/langgenius/mosoo-cli-go/internal/publicthreads"
 	"github.com/langgenius/mosoo-cli-go/internal/target"
+	publishskills "github.com/langgenius/mosoo-cli-go/publish/skills"
 )
 
 //go:embed cli.yaml
@@ -34,6 +37,10 @@ func main() {
 	target.Install(root)
 	root.AddCommand(agentmanifest.NewCommand())
 	root.AddCommand(doctor.NewCommand())
+	root.AddCommand(kitupcobra.NewSkillCommand(kitupcobra.Options{
+		AppID:  "mosoo",
+		Bundle: kitup.FSBundle(publishskills.Mosoo, "mosoo"),
+	}))
 	if err := generated.MountModules(root); err != nil {
 		os.Exit(runtime.FormatError(err, "table", os.Stderr))
 	}
