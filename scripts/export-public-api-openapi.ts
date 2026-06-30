@@ -45,7 +45,7 @@ const operationMetadata: Record<string, Partial<Record<HttpMethod, OperationMeta
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(scriptDirectory, "..");
 const outputPath = resolve(repositoryRoot, ".cache/mosoo/docs/openapi/public-thread-api.openapi.json");
-const committedOrigin = "https://mosoo.ai";
+const committedOrigin = "https://try.mosoo.ai";
 
 const document = createPublicApiOpenApiDocument(committedOrigin);
 for (const [path, methods] of Object.entries(operationMetadata)) {

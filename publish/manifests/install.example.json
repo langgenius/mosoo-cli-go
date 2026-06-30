@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "name": "mosoo-codex-bootstrap",
+  "name": "mosoo-install",
   "channel": "latest",
   "version": "0.0.0-example",
   "generatedAt": "2026-06-24T00:00:00Z",
   "hosts": {
     "install": "https://install.mosoo.ai",
-    "api": "https://api.mosoo.ai"
+    "api": "https://try.mosoo.ai"
   },
   "routes": [
     {
       "kind": "installer",
-      "publicUrl": "https://install.mosoo.ai/codex",
-      "sourcePath": "publish/installers/codex",
+      "publicUrl": "https://install.mosoo.ai/install.sh",
+      "sourcePath": "publish/installers/install.sh",
       "contentType": "text/x-shellscript",
       "cacheControl": "public, max-age=300"
     },
     {
       "kind": "manifest",
-      "publicUrl": "https://install.mosoo.ai/manifests/codex.json",
-      "sourcePath": "publish/manifests/codex.json",
+      "publicUrl": "https://install.mosoo.ai/manifests/install.json",
+      "sourcePath": "publish/manifests/install.json",
       "contentType": "application/json",
       "cacheControl": "public, max-age=300"
     },
@@ -65,16 +65,16 @@
     }
   ],
   "installer": {
-    "url": "https://install.mosoo.ai/codex",
-    "sourcePath": "publish/installers/codex",
-    "auditCommand": "curl -fsSL https://install.mosoo.ai/codex -o install-mosoo-codex.sh && less install-mosoo-codex.sh",
-    "runCommand": "curl -fsSL https://install.mosoo.ai/codex | bash"
+    "url": "https://install.mosoo.ai/install.sh",
+    "sourcePath": "publish/installers/install.sh",
+    "auditCommand": "curl -fsSL https://install.mosoo.ai/install.sh -o install-mosoo.sh && less install-mosoo.sh",
+    "runCommand": "curl -fsSL https://install.mosoo.ai/install.sh | bash"
   },
   "defaults": {
     "target": "cloud",
-    "baseUrl": "https://api.mosoo.ai",
-    "consoleLoginHost": "https://api.mosoo.ai/api",
-    "publicApiLoginHost": "https://api.mosoo.ai/api/v1",
+    "baseUrl": "https://try.mosoo.ai",
+    "consoleLoginHost": "https://try.mosoo.ai/api",
+    "publicApiLoginHost": "https://try.mosoo.ai/api/v1",
     "installDir": "$HOME/.local/bin",
     "skillDir": "$CODEX_HOME/skills/mosoo"
   },
@@ -150,6 +150,6 @@
   "environment": {
     "MOSOO_RELEASE_BASE_URL": "https://install.mosoo.ai/releases/latest/download",
     "MOSOO_TARGET": "cloud",
-    "MOSOO_BASE_URL": "https://api.mosoo.ai"
+    "MOSOO_BASE_URL": "https://try.mosoo.ai"
   }
 }

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROGRAM_NAME="mosoo bootstrap"
+PROGRAM_NAME="mosoo install"
 RELEASE_BASE_URL="${MOSOO_RELEASE_BASE_URL:-https://install.mosoo.ai/releases/latest/download}"
 BIN_DIR="${MOSOO_BIN_DIR:-$HOME/.local/bin}"
 CODEX_HOME_VALUE="${CODEX_HOME:-$HOME/.codex}"
 SKILL_DIR="${MOSOO_SKILL_DIR:-$CODEX_HOME_VALUE/skills/mosoo}"
-SOURCE_ROOT="${MOSOO_BOOTSTRAP_SOURCE_ROOT:-}"
+SOURCE_ROOT="${MOSOO_INSTALL_SOURCE_ROOT:-}"
 CLI_ARCHIVE_URL="${MOSOO_CLI_ARCHIVE_URL:-}"
 SKILL_ARCHIVE_URL="${MOSOO_SKILL_ARCHIVE_URL:-}"
 CLI_VERSION="${MOSOO_CLI_VERSION:-}"
@@ -15,7 +15,7 @@ SKILL_SHA256="${MOSOO_SKILL_SHA256:-}"
 TARGET="${MOSOO_TARGET:-cloud}"
 BASE_URL="${MOSOO_BASE_URL:-}"
 DEV_EMAIL="${MOSOO_DEV_EMAIL:-}"
-LOGIN_URL="${MOSOO_LOGIN_URL:-https://mosoo.ai}"
+LOGIN_URL="${MOSOO_LOGIN_URL:-https://try.mosoo.ai}"
 
 ASSUME_YES=false
 DRY_RUN=false
@@ -30,23 +30,23 @@ tmp_dirs=()
 
 usage() {
 	cat <<'EOF'
-Mosoo Bootstrap
+Mosoo Installer
 
 Usage:
-  codex [options]
+  install.sh [options]
 
 Examples:
-  curl -fsSL https://install.mosoo.ai/codex | bash
-  curl -fsSL https://install.mosoo.ai/codex | bash -s -- --yes
-  curl -fsSL https://install.mosoo.ai/codex | bash -s -- --dry-run
-  curl -fsSL https://install.mosoo.ai/codex | bash -s -- --target local
-  curl -fsSL https://install.mosoo.ai/codex | bash -s -- --cloudflare
+  curl -fsSL https://install.mosoo.ai/install.sh | bash
+  curl -fsSL https://install.mosoo.ai/install.sh | bash -s -- --yes
+  curl -fsSL https://install.mosoo.ai/install.sh | bash -s -- --dry-run
+  curl -fsSL https://install.mosoo.ai/install.sh | bash -s -- --target local
+  curl -fsSL https://install.mosoo.ai/install.sh | bash -s -- --cloudflare
 
 Options:
   -y, --yes                 Run with default approvals; never prompt.
       --dry-run             Print the plan and commands without changing files.
       --bin-dir DIR         Install mosoo CLI into DIR. Default: ~/.local/bin.
-      --skill-dir DIR       Install Mosoo Skill into DIR. Default: ~/.codex/skills/mosoo.
+      --skill-dir DIR       Install Mosoo Skill into DIR. Default: $CODEX_HOME/skills/mosoo or ~/.codex/skills/mosoo.
       --source-root DIR     Install from a local mosoo-cli-go checkout for development.
       --cli-url URL         Download CLI archive from URL.
       --skill-url URL       Download Skill archive from URL.
@@ -68,7 +68,7 @@ Environment:
   MOSOO_DEV_EMAIL           @mosoo.ai email used for local development login.
   MOSOO_LOGIN_URL           Web login URL shown when cloud login needs user action.
   MOSOO_TARGET              Runtime target used by login and doctor. Default: cloud.
-  MOSOO_BOOTSTRAP_SOURCE_ROOT
+  MOSOO_INSTALL_SOURCE_ROOT
                             Local checkout root used by development installs.
 EOF
 }
@@ -196,7 +196,7 @@ default_base_url() {
 	local target="$1"
 	case "$target" in
 		""|local) printf '%s\n' "${BASE_URL:-http://127.0.0.1:8787}" ;;
-		cloud) printf '%s\n' "${BASE_URL:-https://api.mosoo.ai}" ;;
+		cloud) printf '%s\n' "${BASE_URL:-https://try.mosoo.ai}" ;;
 		custom) [ -n "$BASE_URL" ] || die "--base-url is required for --target custom"; printf '%s\n' "$BASE_URL" ;;
 		*) die "--target must be one of local, cloud, or custom" ;;
 	esac
@@ -430,7 +430,7 @@ run_local_development_login() {
 
 	if "$DRY_RUN"; then
 		print_cmd curl -fsSL -c cookies.txt -H "content-type: application/json" -H "origin: $origin" --data '{"email":"dev@mosoo.ai"}' "$login_url"
-		print_cmd curl -fsSL -b cookies.txt -H "content-type: application/json" -H "origin: $origin" --data '{"label":"Mosoo CLI local bootstrap"}' "$token_url"
+			print_cmd curl -fsSL -b cookies.txt -H "content-type: application/json" -H "origin: $origin" --data '{"label":"Mosoo CLI local install"}' "$token_url"
 		print_cmd "$BIN_DIR/mosoo" auth login --hostname "$console" --with-token
 		print_cmd "$BIN_DIR/mosoo" auth login --hostname "$(public_api_host)" --skip-validate --with-token
 		return
@@ -452,7 +452,7 @@ run_local_development_login() {
 	token_response="$tmp/token-response.json"
 
 	printf '{"email":%s}\n' "$(json_string "$email")" >"$login_body"
-	printf '{"label":"Mosoo CLI local bootstrap"}\n' >"$token_body"
+	printf '{"label":"Mosoo CLI local install"}\n' >"$token_body"
 
 	curl -fsSL -c "$cookie_jar" \
 		-H "content-type: application/json" \
@@ -505,7 +505,7 @@ Cloud login needs a Mosoo API token from a logged-in Mosoo web session.
 1. Open Mosoo Cloud:
    $LOGIN_URL
 2. Sign in or create an account with email verification.
-3. Copy the Codex bootstrap command from the web app, or create and copy an API token.
+3. Copy the install command from the web app, or create and copy an API token.
 4. Paste the API token here, or rerun this installer with MOSOO_API_TOKEN set.
 
 EOF
@@ -637,7 +637,7 @@ main() {
 		run_doctor
 	fi
 
-	log "Mosoo Bootstrap finished."
+	log "Mosoo install finished."
 }
 
 main "$@"

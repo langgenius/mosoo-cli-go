@@ -20,7 +20,7 @@ separate agent runtime.
    `references/cli.md`, then follow its command-index links when command
    details are needed.
 4. For missing first-time setup, read `references/setup.md` and ask the user to
-   run Bootstrap.
+   run the installer.
 
 ## Routing
 

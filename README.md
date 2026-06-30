@@ -84,16 +84,16 @@ brew install langgenius/mosoo-cli-go/mosoo
 The formula downloads the tagged source release, builds `cmd/mosoo` with Go,
 and installs the resulting `mosoo` binary into Homebrew's `bin` directory.
 
-## Bootstrap
+## Installer
 
-The source for the Codex-facing Bootstrap installer lives at
-`publish/installers/codex`. The intended public entrypoint is:
+The source for the Mosoo installer lives at `publish/installers/install.sh`.
+The current stable public entrypoint is:
 
 ```sh
-curl -fsSL https://install.mosoo.ai/codex | bash
+curl -fsSL https://install.mosoo.ai/install.sh | bash
 ```
 
-Bootstrap is interactive by default and asks for `y` or `n` before high-impact
+The installer is interactive by default and asks for `y` or `n` before high-impact
 steps. Use `--yes` for automation and `--dry-run` to preview the plan.
 
 ## Published Skill layout
@@ -189,18 +189,18 @@ readiness data under `target`, `auth`, `install`, `checks`, and `failures`.
 Failure entries include stable `code` and `action` fields so automation can
 branch without parsing human messages.
 
-For local development targets, Bootstrap can sign in through the local development
+For local development targets, the installer can sign in through the local development
 backdoor with an `@mosoo.ai` email, create a personal access token, and write the
 CLI credentials for both hostname bases. This only works against a loopback Mosoo
 API with the development backdoor enabled.
 
-For cloud and custom targets, sign in at `https://mosoo.ai`, use a Mosoo API
+For cloud and custom targets, sign in at `https://try.mosoo.ai`, use a Mosoo API
 token from that logged-in web session, then log in once per hostname base (same
 token is fine):
 
 ```sh
-mosoo auth login --hostname https://api.mosoo.ai/api
-mosoo auth login --hostname https://api.mosoo.ai/api/v1 --skip-validate
+mosoo auth login --hostname https://try.mosoo.ai/api
+mosoo auth login --hostname https://try.mosoo.ai/api/v1 --skip-validate
 ```
 
 `auth login` validates the token against `GET /access-tokens` on the `/api` host.

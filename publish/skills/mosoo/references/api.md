@@ -36,7 +36,7 @@ Primary contract:
 * Human docs: `/`, `/quickstart`, `/auth-and-access`
 * Raw OpenAPI: `/mosoo-openapi.en.generated.json`
 * API version: `v1`
-* Base URL used in examples: `https://mosoo.ai/api/v1`
+* Base URL used in examples: `https://try.mosoo.ai/api/v1`
 
 Do not infer request fields that are not listed here or in the raw OpenAPI. The public API rejects unsupported fields.
 
@@ -119,7 +119,7 @@ export MOSOO_AGENT_ID="01J00000000000000000000001"
 Create a Thread and queue the initial Run:
 
 ```bash theme={null}
-curl -X POST "https://mosoo.ai/api/v1/agents/$MOSOO_AGENT_ID/threads" \
+curl -X POST "https://try.mosoo.ai/api/v1/agents/$MOSOO_AGENT_ID/threads" \
   -H "Authorization: Bearer $MOSOO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: ticket-182-create-thread" \
@@ -146,7 +146,7 @@ export MOSOO_THREAD_ID="01J00000000000000000000002"
 Send a follow-up message:
 
 ```bash theme={null}
-curl -X POST "https://mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/events" \
+curl -X POST "https://try.mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/events" \
   -H "Authorization: Bearer $MOSOO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: ticket-182-follow-up-1" \
@@ -164,7 +164,7 @@ curl -X POST "https://mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/events" \
 Read the public event log:
 
 ```bash theme={null}
-curl "https://mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/events?limit=100" \
+curl "https://try.mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/events?limit=100" \
   -H "Authorization: Bearer $MOSOO_API_TOKEN"
 ```
 
@@ -175,7 +175,7 @@ Use this flow when a Thread needs a file attachment. Public uploads are currentl
 Create a Thread-scoped upload session:
 
 ```bash theme={null}
-curl -X POST "https://mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/files/uploads" \
+curl -X POST "https://try.mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/files/uploads" \
   -H "Authorization: Bearer $MOSOO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -196,7 +196,7 @@ export MOSOO_FILE_ID="01J0000000000000000000000J"
 Upload bytes:
 
 ```bash theme={null}
-curl -X PUT "https://mosoo.ai/api/v1/files/$MOSOO_FILE_ID/content" \
+curl -X PUT "https://try.mosoo.ai/api/v1/files/$MOSOO_FILE_ID/content" \
   -H "Authorization: Bearer $MOSOO_API_TOKEN" \
   -H "Content-Type: application/octet-stream" \
   --data-binary @brief.txt
@@ -205,7 +205,7 @@ curl -X PUT "https://mosoo.ai/api/v1/files/$MOSOO_FILE_ID/content" \
 Complete the upload:
 
 ```bash theme={null}
-curl -X POST "https://mosoo.ai/api/v1/files/$MOSOO_FILE_ID/complete" \
+curl -X POST "https://try.mosoo.ai/api/v1/files/$MOSOO_FILE_ID/complete" \
   -H "Authorization: Bearer $MOSOO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{}'
@@ -214,7 +214,7 @@ curl -X POST "https://mosoo.ai/api/v1/files/$MOSOO_FILE_ID/complete" \
 Claim the ready draft file into the Thread:
 
 ```bash theme={null}
-curl -X POST "https://mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/files" \
+curl -X POST "https://try.mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/files" \
   -H "Authorization: Bearer $MOSOO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -225,7 +225,7 @@ curl -X POST "https://mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/files" \
 Use the file in a later user message with `attachmentIds`:
 
 ```bash theme={null}
-curl -X POST "https://mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/events" \
+curl -X POST "https://try.mosoo.ai/api/v1/threads/$MOSOO_THREAD_ID/events" \
   -H "Authorization: Bearer $MOSOO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: ticket-182-file-question-1" \

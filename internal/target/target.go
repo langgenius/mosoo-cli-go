@@ -18,7 +18,7 @@ const (
 	CustomTarget = "custom"
 
 	DefaultLocalBaseURL = "http://127.0.0.1:8787"
-	DefaultCloudBaseURL = "https://api.mosoo.ai"
+	DefaultCloudBaseURL = "https://try.mosoo.ai"
 
 	TargetEnv  = "MOSOO_TARGET"
 	BaseURLEnv = "MOSOO_BASE_URL"

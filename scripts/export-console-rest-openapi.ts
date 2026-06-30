@@ -31,7 +31,7 @@ type OpenApiPaths = Record<string, Partial<Record<HttpMethod, OpenApiOperation>>
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(scriptDirectory, "..");
 const outputPath = resolve(repositoryRoot, ".cache/mosoo/docs/openapi/console-rest.openapi.json");
-const committedOrigin = "https://mosoo.ai";
+const committedOrigin = "https://try.mosoo.ai";
 
 const EXAMPLE_APP_ID = "01J00000000000000000000001";
 const EXAMPLE_FILE_ID = "01J0000000000000000000000J";

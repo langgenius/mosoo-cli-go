@@ -24,7 +24,7 @@ func TestAgentEnvWriteCreatesDotenvAndRedactsOutput(t *testing.T) {
 	cmd.SetArgs([]string{
 		"env", "write",
 		"--file", envFile,
-		"--api-base", "https://api.mosoo.ai/api/v1",
+		"--api-base", "https://try.mosoo.ai/api/v1",
 		"--agent-id", "agent_123",
 		"--api-token", testAPIToken,
 	})
@@ -39,7 +39,7 @@ func TestAgentEnvWriteCreatesDotenvAndRedactsOutput(t *testing.T) {
 	gotFile := string(data)
 	for _, want := range []string{
 		"KEEP_ME=yes\n",
-		"MOSOO_API_BASE=https://api.mosoo.ai/api/v1\n",
+		"MOSOO_API_BASE=https://try.mosoo.ai/api/v1\n",
 		"MOSOO_AGENT_ID=agent_123\n",
 		"MOSOO_API_TOKEN=" + testAPIToken + "\n",
 	} {
@@ -62,7 +62,7 @@ func TestAgentEnvExportRedactsTokenInTerminalOutput(t *testing.T) {
 
 	cmd.SetArgs([]string{
 		"env", "export",
-		"--api-base", "https://api.mosoo.ai/api/v1",
+		"--api-base", "https://try.mosoo.ai/api/v1",
 		"--agent-id", "agent_123",
 		"--api-token", testAPIToken,
 	})
@@ -72,7 +72,7 @@ func TestAgentEnvExportRedactsTokenInTerminalOutput(t *testing.T) {
 
 	got := stdout.String()
 	for _, want := range []string{
-		`export MOSOO_API_BASE="https://api.mosoo.ai/api/v1"`,
+		`export MOSOO_API_BASE="https://try.mosoo.ai/api/v1"`,
 		`export MOSOO_AGENT_ID="agent_123"`,
 		`export MOSOO_API_TOKEN="mst_...7890"`,
 	} {
@@ -90,7 +90,7 @@ func TestAgentEnvJSONRedactsToken(t *testing.T) {
 	cmd.SetArgs([]string{
 		"env", "write",
 		"--file", filepath.Join(t.TempDir(), ".dev.vars"),
-		"--api-base", "https://api.mosoo.ai/api/v1",
+		"--api-base", "https://try.mosoo.ai/api/v1",
 		"--agent-id", "agent_123",
 		"--api-token", testAPIToken,
 		"--json",
@@ -109,7 +109,7 @@ func TestAgentEnvJSONRedactsToken(t *testing.T) {
 	if got["apiToken"] != "mst_...7890" {
 		t.Fatalf("apiToken = %#v, want redacted token", got["apiToken"])
 	}
-	if got["agentId"] != "agent_123" || got["apiBase"] != "https://api.mosoo.ai/api/v1" {
+	if got["agentId"] != "agent_123" || got["apiBase"] != "https://try.mosoo.ai/api/v1" {
 		t.Fatalf("unexpected JSON payload: %#v", got)
 	}
 }
@@ -117,12 +117,12 @@ func TestAgentEnvJSONRedactsToken(t *testing.T) {
 func TestAgentEnvWriteFallsBackToLoggedInPublicAPIHostToken(t *testing.T) {
 	cmd, stdout, stderr := newAgentCommandForEnvTest(t)
 	envFile := filepath.Join(t.TempDir(), ".env.local")
-	writeTestHostsFile(t, "https://api.mosoo.ai/api/v1", testAPIToken)
+	writeTestHostsFile(t, "https://try.mosoo.ai/api/v1", testAPIToken)
 
 	cmd.SetArgs([]string{
 		"env", "write",
 		"--file", envFile,
-		"--api-base", "https://api.mosoo.ai/api/v1",
+		"--api-base", "https://try.mosoo.ai/api/v1",
 		"--agent-id", "agent_123",
 	})
 	if err := cmd.Execute(); err != nil {
@@ -146,7 +146,7 @@ func TestAgentEnvExportJSONRedactsToken(t *testing.T) {
 
 	cmd.SetArgs([]string{
 		"env", "export",
-		"--api-base", "https://api.mosoo.ai/api/v1",
+		"--api-base", "https://try.mosoo.ai/api/v1",
 		"--agent-id", "agent_123",
 		"--api-token", testAPIToken,
 		"--json",
