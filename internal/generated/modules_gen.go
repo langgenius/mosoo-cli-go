@@ -3,9 +3,9 @@
 package generated
 
 import (
-	console "github.com/langgenius/mosoo-cli-go/internal/generated/console"
-	consolerest "github.com/langgenius/mosoo-cli-go/internal/generated/consolerest"
-	threads "github.com/langgenius/mosoo-cli-go/internal/generated/threads"
+	console "github.com/langgenius/mosoo-connector/internal/generated/console"
+	consolerest "github.com/langgenius/mosoo-connector/internal/generated/consolerest"
+	threads "github.com/langgenius/mosoo-connector/internal/generated/threads"
 	"github.com/spf13/cobra"
 )
 

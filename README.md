@@ -1,4 +1,4 @@
-# mosoo-cli-go
+# mosoo-connector
 
 Generated Go CLI for Mosoo integrators: Public Thread API, Console GraphQL, and console REST.
 
@@ -42,13 +42,13 @@ make build MOSOO_HOST_BASE=https://api.example.com
 Install the latest published Go module without cloning the repository:
 
 ```sh
-go install github.com/langgenius/mosoo-cli-go/cmd/mosoo@latest
+go install github.com/langgenius/mosoo-connector/cmd/mosoo@latest
 ```
 
 Install a specific release:
 
 ```sh
-go install github.com/langgenius/mosoo-cli-go/cmd/mosoo@vX.Y.Z
+go install github.com/langgenius/mosoo-connector/cmd/mosoo@vX.Y.Z
 ```
 
 `go install` downloads the module source and compiles it locally. It does not
@@ -74,15 +74,17 @@ binary's `mosoo --version` output exactly matches the build metadata.
 
 ### Homebrew
 
-Tap this repository, then install the formula:
+After a release's generated Homebrew formula pull request is merged, tap this
+repository and install the formula:
 
 ```sh
-brew tap langgenius/mosoo-cli-go https://github.com/langgenius/mosoo-cli-go
-brew install langgenius/mosoo-cli-go/mosoo
+brew tap langgenius/mosoo-connector https://github.com/langgenius/mosoo-connector
+brew install langgenius/mosoo-connector/mosoo
 ```
 
-The formula downloads the tagged source release, builds `cmd/mosoo` with Go,
-and installs the resulting `mosoo` binary into Homebrew's `bin` directory.
+Release automation opens a GoReleaser pull request to add or update the
+formula. Merged formula revisions install the matching prebuilt `mosoo` archive
+from GitHub Releases.
 
 ## Installer
 

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/langgenius/mosoo-cli-go/internal/buildinfo"
-	"github.com/langgenius/mosoo-cli-go/internal/target"
+	"github.com/langgenius/mosoo-connector/internal/buildinfo"
+	"github.com/langgenius/mosoo-connector/internal/target"
 	latheconfig "github.com/lathe-cli/lathe/pkg/config"
 	"github.com/spf13/cobra"
 )

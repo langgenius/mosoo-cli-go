@@ -11,14 +11,14 @@ import (
 	kitup "github.com/samzong/kitup/go"
 	kitupcobra "github.com/samzong/kitup/go-cobra"
 
-	"github.com/langgenius/mosoo-cli-go/internal/agentmanifest"
-	"github.com/langgenius/mosoo-cli-go/internal/buildinfo"
-	"github.com/langgenius/mosoo-cli-go/internal/consolecommands"
-	"github.com/langgenius/mosoo-cli-go/internal/doctor"
-	"github.com/langgenius/mosoo-cli-go/internal/generated"
-	"github.com/langgenius/mosoo-cli-go/internal/publicthreads"
-	"github.com/langgenius/mosoo-cli-go/internal/target"
-	publishskills "github.com/langgenius/mosoo-cli-go/publish/skills"
+	"github.com/langgenius/mosoo-connector/internal/agentmanifest"
+	"github.com/langgenius/mosoo-connector/internal/buildinfo"
+	"github.com/langgenius/mosoo-connector/internal/consolecommands"
+	"github.com/langgenius/mosoo-connector/internal/doctor"
+	"github.com/langgenius/mosoo-connector/internal/generated"
+	"github.com/langgenius/mosoo-connector/internal/publicthreads"
+	"github.com/langgenius/mosoo-connector/internal/target"
+	publishskills "github.com/langgenius/mosoo-connector/publish/skills"
 )
 
 //go:embed cli.yaml

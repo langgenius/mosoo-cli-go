@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	threadspecs "github.com/langgenius/mosoo-cli-go/internal/generated/threads"
+	threadspecs "github.com/langgenius/mosoo-connector/internal/generated/threads"
 	latheruntime "github.com/lathe-cli/lathe/pkg/runtime"
 	"github.com/spf13/cobra"
 )

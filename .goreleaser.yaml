@@ -43,3 +43,25 @@ archives:
 
 checksum:
   name_template: checksums.txt
+
+brews:
+  - name: mosoo
+    ids:
+      - cli
+    repository:
+      owner: langgenius
+      name: mosoo-connector
+      branch: "homebrew/{{ .ProjectName }}-{{ .Version }}"
+      pull_request:
+        enabled: true
+        base:
+          owner: langgenius
+          name: mosoo-connector
+          branch: main
+    directory: Formula
+    commit_msg_template: "chore(homebrew): update mosoo to {{ .Tag }}"
+    homepage: "https://github.com/langgenius/mosoo-connector"
+    description: "Generated CLI for Mosoo integrators"
+    test: |
+      assert_match "mosoo {{ .Tag }}", shell_output("#{bin}/mosoo --version")
+      system "#{bin}/mosoo", "commands", "--json"

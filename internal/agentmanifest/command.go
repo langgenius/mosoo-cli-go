@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/langgenius/mosoo-cli-go/internal/target"
+	"github.com/langgenius/mosoo-connector/internal/target"
 	latheconfig "github.com/lathe-cli/lathe/pkg/config"
 	latheruntime "github.com/lathe-cli/lathe/pkg/runtime"
 	"github.com/spf13/cobra"

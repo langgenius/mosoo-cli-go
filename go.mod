@@ -1,4 +1,4 @@
-module github.com/langgenius/mosoo-cli-go
+module github.com/langgenius/mosoo-connector
 
 go 1.25.7
 

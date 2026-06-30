@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PROGRAM_NAME="mosoo install"
-RELEASE_BASE_URL="${MOSOO_RELEASE_BASE_URL:-https://github.com/langgenius/mosoo-cli-go/releases/latest/download}"
+RELEASE_BASE_URL="${MOSOO_RELEASE_BASE_URL:-https://github.com/langgenius/mosoo-connector/releases/latest/download}"
 BIN_DIR="${MOSOO_BIN_DIR:-$HOME/.local/bin}"
 CODEX_HOME_VALUE="${CODEX_HOME:-$HOME/.codex}"
 SKILL_DIR="${MOSOO_SKILL_DIR:-$CODEX_HOME_VALUE/skills/mosoo}"
@@ -47,7 +47,7 @@ Options:
       --dry-run             Print the plan and commands without changing files.
       --bin-dir DIR         Install mosoo CLI into DIR. Default: ~/.local/bin.
       --skill-dir DIR       Install Mosoo Skill into DIR. Default: $CODEX_HOME/skills/mosoo or ~/.codex/skills/mosoo.
-      --source-root DIR     Install from a local mosoo-cli-go checkout for development.
+      --source-root DIR     Install from a local mosoo-connector checkout for development.
       --cli-url URL         Download CLI archive from URL.
       --skill-url URL       Download Skill archive from URL.
       --target TARGET       Runtime target for login and doctor: local, cloud, or custom. Default: cloud.
