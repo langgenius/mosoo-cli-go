@@ -1,0 +1,45 @@
+version: 2
+
+project_name: mosoo
+
+before:
+  hooks:
+    - rm -rf .cache/goreleaser-skill
+    - mkdir -p .cache/goreleaser-skill
+    - cp -R publish/skills/mosoo .cache/goreleaser-skill/mosoo
+
+builds:
+  - id: mosoo
+    main: ./cmd/mosoo
+    binary: mosoo
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X github.com/lathe-cli/lathe/pkg/lathe.Version={{ .Tag }} -X github.com/lathe-cli/lathe/pkg/lathe.Commit={{ .Commit }} -X github.com/lathe-cli/lathe/pkg/lathe.Date={{ .Date }}
+
+archives:
+  - id: cli
+    ids:
+      - mosoo
+    name_template: mosoo-{{ .Os }}-{{ .Arch }}
+    formats:
+      - tar.gz
+  - id: skill
+    meta: true
+    name_template: mosoo-skill
+    formats:
+      - tar.gz
+    files:
+      - src: .cache/goreleaser-skill/mosoo
+        dst: mosoo
+
+checksum:
+  name_template: checksums.txt

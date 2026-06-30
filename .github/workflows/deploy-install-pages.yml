@@ -1,0 +1,29 @@
+name: Deploy install pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - publish/installers/**
+      - .github/workflows/deploy-install-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Verify installer payload
+        run: |
+          bash -n publish/installers/install.sh
+
+      - uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy publish/installers --project-name mosoo-install --branch main

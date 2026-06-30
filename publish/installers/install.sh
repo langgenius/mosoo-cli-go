@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PROGRAM_NAME="mosoo install"
-RELEASE_BASE_URL="${MOSOO_RELEASE_BASE_URL:-https://install.mosoo.ai/releases/latest/download}"
+RELEASE_BASE_URL="${MOSOO_RELEASE_BASE_URL:-https://github.com/langgenius/mosoo-cli-go/releases/latest/download}"
 BIN_DIR="${MOSOO_BIN_DIR:-$HOME/.local/bin}"
 CODEX_HOME_VALUE="${CODEX_HOME:-$HOME/.codex}"
 SKILL_DIR="${MOSOO_SKILL_DIR:-$CODEX_HOME_VALUE/skills/mosoo}"
