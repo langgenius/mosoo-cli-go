@@ -12,6 +12,12 @@ auth:
     method: GET
     path: /access-tokens
 
+update:
+  github:
+    owner: langgenius
+    repo: mosoo-connector
+    asset: "{{ .Name }}-{{ .OS }}-{{ .Arch }}.tar.gz"
+
 skill:
   root: .cache/lathe-skill
   include: publish/skills/mosoo/lathe-include
